@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import { PageContainer } from '../components/Layout/Page/PageContainer';
 import { PageHeader } from '../components/Layout/Page/PageHeader';
 import { PageSearch } from '../components/Layout/Page/PageSearch';
+import { EmptyState } from '../components/ui/empty-state';
 
 export function Tasks() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -87,9 +88,23 @@ export function Tasks() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {filteredTasks.length === 0 ? (
-                            <div className="col-span-full text-center py-12 bg-card border border-border rounded-lg border-dashed">
-                                <p className="text-muted-foreground">Nenhuma tarefa encontrada.</p>
-                                <Button variant="link" onClick={() => fetchTasks()}>Atualizar Lista</Button>
+                            <div className="col-span-full">
+                                <EmptyState
+                                    title="Nenhuma tarefa encontrada"
+                                    description={searchTerm ? "Tente buscar por outro termo ou limpe o filtro." : "Você ainda não possui tarefas cadastradas."}
+                                    icon={CheckSquare}
+                                    action={
+                                        searchTerm ? (
+                                            <Button variant="outline" onClick={() => setSearchTerm('')}>
+                                                Limpar Busca
+                                            </Button>
+                                        ) : (
+                                            <Button variant="link" onClick={() => fetchTasks()}>
+                                                Atualizar Lista
+                                            </Button>
+                                        )
+                                    }
+                                />
                             </div>
                         ) : (
                             filteredTasks.map(task => (

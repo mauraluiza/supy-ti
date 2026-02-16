@@ -8,6 +8,7 @@ import { PageContainer } from '../components/Layout/Page/PageContainer';
 import { PageHeader } from '../components/Layout/Page/PageHeader';
 import { PageSearch } from '../components/Layout/Page/PageSearch';
 import { Button } from '../components/ui/button';
+import { EmptyState } from '../components/ui/empty-state';
 
 export function Clients() {
     const { decryptData } = useEncryption();
@@ -109,7 +110,14 @@ export function Clients() {
                                 <tbody className="divide-y divide-border">
                                     {filteredClients.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="text-center py-12 text-muted-foreground">Nenhum cliente encontrado.</td>
+                                            <td colSpan={4} className="p-4">
+                                                <EmptyState
+                                                    title="Nenhum cliente encontrado"
+                                                    description={searchTerm ? "Verifique a ortografia ou tente outro termo." : "Comece cadastrando seu primeiro cliente."}
+                                                    icon={Users}
+                                                    className="border-none bg-transparent" // Remove border since table already has it
+                                                />
+                                            </td>
                                         </tr>
                                     ) : (
                                         filteredClients.map(client => {

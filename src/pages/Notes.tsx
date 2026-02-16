@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button';
 import { PageContainer } from '../components/Layout/Page/PageContainer';
 import { PageHeader } from '../components/Layout/Page/PageHeader';
 import { PageSearch } from '../components/Layout/Page/PageSearch';
+import { EmptyState } from '../components/ui/empty-state';
 
 export function Notes() {
     const [notes, setNotes] = useState<Note[]>([]);
@@ -115,10 +116,19 @@ export function Notes() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredNotes.length === 0 ? (
-                            <div className="col-span-full text-center py-16 bg-muted/30 border border-dashed border-border rounded-lg">
-                                <StickyNote className="h-10 w-10 text-muted-foreground/20 mx-auto mb-3" />
-                                <p className="text-muted-foreground font-medium">Nenhuma informação encontrada.</p>
-                                <Button variant="link" onClick={() => fetchNotes()} className="mt-2">Atualizar Lista</Button>
+                            <div className="col-span-full">
+                                <EmptyState
+                                    title="Nenhuma informação encontrada"
+                                    description={searchTerm ? "Não encontramos nada com esse termo." : "Cadastre procedimentos e senhas para facilitar o dia a dia."}
+                                    icon={StickyNote}
+                                    action={
+                                        searchTerm && (
+                                            <Button variant="outline" onClick={() => setSearchTerm('')}>
+                                                Limpar Filtros
+                                            </Button>
+                                        )
+                                    }
+                                />
                             </div>
                         ) : (
                             filteredNotes.map(note => (
