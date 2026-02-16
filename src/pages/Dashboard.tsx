@@ -1,5 +1,5 @@
 import { Users, Clock, Star, ArrowRight } from 'lucide-react';
-import { format } from 'date-fns';
+
 import clsx from 'clsx';
 import type { Client, Task, Note } from '../types';
 
