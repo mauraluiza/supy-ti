@@ -27,45 +27,52 @@ export function Dashboard() {
         <div className="space-y-8 pb-20">
 
             {/* SEÇÃO 1: CLIENTES RECENTES */}
-            <section>
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                        <Users size={20} className="text-blue-500" />
+            <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2 tracking-tight">
+                        <Users size={20} className="text-primary" />
                         Clientes Recentes
                     </h2>
-                    <button className="text-sm text-blue-400 hover:text-blue-300">Ver todos</button>
+                    <button className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">Ver todos</button>
                 </div>
 
-                <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-sm">
+                <div className="rounded-lg border border-border bg-card text-card-foreground shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left">
-                            <thead className="text-xs text-gray-400 uppercase bg-gray-700/50">
+                            <thead className="text-xs text-muted-foreground uppercase bg-muted/50 border-b border-border">
                                 <tr>
-                                    <th className="px-6 py-3">Sistema</th>
-                                    <th className="px-6 py-3">Nome</th>
-                                    <th className="px-6 py-3">Login Code</th>
-                                    <th className="px-6 py-3">Usuário</th>
-                                    <th className="px-6 py-3">Senha</th>
+                                    <th className="px-6 py-3 font-medium">Sistema</th>
+                                    <th className="px-6 py-3 font-medium">Nome</th>
+                                    <th className="px-6 py-3 font-medium">Login Code</th>
+                                    <th className="px-6 py-3 font-medium">Usuário</th>
+                                    <th className="px-6 py-3 font-medium">Senha</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-700">
+                            <tbody className="divide-y divide-border">
                                 {MOCK_CLIENTS.map((client) => {
                                     const isCplug = client.system === 'cplug';
                                     return (
                                         <tr
                                             key={client.id}
                                             className={clsx(
-                                                "transition-colors hover:bg-gray-700/30 cursor-pointer",
-                                                isCplug ? "bg-blue-900/10" : "bg-red-900/10"
+                                                "transition-colors hover:bg-muted/50 cursor-pointer",
+                                                isCplug ? "dark:bg-blue-950/10" : "dark:bg-red-950/10"
                                             )}
                                         >
-                                            <td className={clsx("px-6 py-4 font-medium", isCplug ? "text-blue-400" : "text-red-400")}>
-                                                {client.system?.toUpperCase()}
+                                            <td className="px-6 py-4">
+                                                <span className={clsx(
+                                                    "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset",
+                                                    isCplug
+                                                        ? "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-400/30"
+                                                        : "bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-400/30"
+                                                )}>
+                                                    {client.system?.toUpperCase()}
+                                                </span>
                                             </td>
-                                            <td className="px-6 py-4 font-medium text-white">{client.name}</td>
-                                            <td className="px-6 py-4 text-gray-400">{client.login_code || '-'}</td>
-                                            <td className="px-6 py-4 text-gray-300">{client.system_login}</td>
-                                            <td className="px-6 py-4 font-mono text-gray-500">******</td>
+                                            <td className="px-6 py-4 font-medium text-foreground">{client.name}</td>
+                                            <td className="px-6 py-4 text-muted-foreground">{client.login_code || '-'}</td>
+                                            <td className="px-6 py-4 text-muted-foreground">{client.system_login}</td>
+                                            <td className="px-6 py-4 font-mono text-muted-foreground">******</td>
                                         </tr>
                                     );
                                 })}
@@ -76,14 +83,14 @@ export function Dashboard() {
             </section>
 
             {/* SEÇÃO 2: TAREFAS */}
-            <section>
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+            <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2 tracking-tight">
                         <Clock size={20} className="text-orange-500" />
                         Tarefas Recentes
                     </h2>
                     <div className="flex gap-2">
-                        <button className="p-1 hover:bg-gray-800 rounded text-gray-400"><ArrowRight size={16} /></button>
+                        <button className="p-1 hover:bg-muted rounded text-muted-foreground transition-colors"><ArrowRight size={16} /></button>
                     </div>
                 </div>
 
@@ -92,20 +99,20 @@ export function Dashboard() {
                     {MOCK_TASKS.map((task) => (
                         <div
                             key={task.id}
-                            className="snap-start min-w-[280px] md:min-w-[320px] bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-sm flex flex-col gap-3 hover:border-gray-600 transition-all cursor-pointer group"
+                            className="snap-start min-w-[280px] md:min-w-[320px] bg-card p-5 rounded-lg border border-border shadow-sm flex flex-col gap-3 hover:border-primary/50 transition-all cursor-pointer group"
                         >
                             <div className="flex justify-between items-start">
-                                <span className="text-sm font-medium text-gray-400 truncate max-w-[180px]">
+                                <span className="text-sm font-medium text-muted-foreground truncate max-w-[180px]">
                                     {task.client?.name}
                                 </span>
                                 <StatusBadge status={task.status} />
                             </div>
-                            <p className="text-white font-medium line-clamp-2 mt-1">
+                            <p className="text-card-foreground font-medium line-clamp-2 mt-1 leading-snug">
                                 {task.description}
                             </p>
-                            <div className="mt-auto pt-3 text-xs text-gray-500 flex justify-between items-center border-t border-gray-700/50">
+                            <div className="mt-auto pt-3 text-xs text-muted-foreground flex justify-between items-center border-t border-border">
                                 <span>Há 2 horas</span>
-                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-400">Ver detalhes →</span>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-primary font-medium">Ver detalhes →</span>
                             </div>
                         </div>
                     ))}
@@ -113,9 +120,9 @@ export function Dashboard() {
             </section>
 
             {/* SEÇÃO 3: INFO GERAIS */}
-            <section>
-                <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+            <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-foreground flex items-center gap-2 tracking-tight">
                         <Star size={20} className="text-yellow-500" />
                         Informações Rápidas
                     </h2>
@@ -125,13 +132,13 @@ export function Dashboard() {
                     {MOCK_NOTES.map((note) => (
                         <div
                             key={note.id}
-                            className="bg-gray-800/50 p-5 rounded-xl border border-gray-700/50 hover:bg-gray-800 transition-all cursor-pointer"
+                            className="bg-card p-5 rounded-lg border border-border hover:bg-muted/50 transition-all cursor-pointer shadow-sm group"
                         >
                             <div className="flex justify-between items-start mb-2">
-                                <h3 className="text-white font-medium">{note.title}</h3>
+                                <h3 className="text-card-foreground font-semibold tracking-tight">{note.title}</h3>
                                 {note.is_favorite && <Star size={16} className="text-yellow-500 fill-yellow-500" />}
                             </div>
-                            <p className="text-sm text-gray-400 line-clamp-3">
+                            <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
                                 {note.content}
                             </p>
                         </div>

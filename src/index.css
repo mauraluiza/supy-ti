@@ -2,25 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@layer base {
+  :root {
+    /* HSL Variables - Converted from HEX as per requirements */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    /* Primary Main: #02b1f9 -> 199 97% 49% */
+    --primary: 199 97% 49%;
+    /* Primary Light: #cef9fc -> 190 94% 90% */
+    --primary-light: 190 94% 90%;
+    /* Primary Dark: #0284c7 -> 199 98% 40% (approx) -> using user provided valued 199 98% 40% */
+    --primary-dark: 199 98% 40%;
+    /* Primary Hover: #029be0 -> User didn't give HSL for this, but we can derive or use closest. 
+       Let's stick to the requested structure which maps 'primary' to standard variable.
+       Usually hover is handled by opacity or distinct variable if strictly needed.
+       For now, we map the --primary variable. */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Background Main: #f8fbfd -> 210 33% 98% */
+    --background: 210 33% 98%;
+    /* Background Card: #ffffff -> 0 0% 100% */
+    --card: 0 0% 100%;
+
+    /* Text Primary: #0f172a -> 222 47% 11% */
+    --foreground: 222 47% 11%;
+    /* Text Secondary/Muted: #94a3b8 -> 215 16% 47% */
+    --muted-foreground: 215 16% 47%;
+
+    /* Border: #e3eef5 -> 210 32% 91% */
+    /* Wait, #e3eef5 is light blueish. 
+       User provided: --border: 210 32% 91% 
+       Let's verify: HSL(210, 32%, 91%) is indeed #e2e8f0 like. Close enough. */
+    --border: 210 32% 91%;
+
+    /* Radius */
+    --radius: 0.75rem;
+    /* 12px */
+  }
+
+  /* Dark Mode Placeholder - To be refined later if needed, but structure is here */
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --popover: 222.2 84% 4.9%;
+    --primary: 199 97% 49%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }

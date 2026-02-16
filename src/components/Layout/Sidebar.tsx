@@ -30,7 +30,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             {/* Mobile Overlay */}
             <div
                 className={clsx(
-                    "fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-40 transition-opacity md:hidden",
+                    "fixed inset-0 bg-black/80 backdrop-blur-sm z-40 transition-opacity md:hidden",
                     isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                 )}
                 onClick={onClose}
@@ -39,51 +39,52 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             {/* Sidebar Container */}
             <aside
                 className={clsx(
-                    "fixed top-0 left-0 h-full w-64 bg-gray-800 border-r border-gray-700 z-50 transition-transform duration-300 ease-in-out md:translate-x-0",
+                    "fixed top-0 left-0 h-full w-64 bg-background border-r border-border z-50 transition-transform duration-300 ease-in-out md:translate-x-0",
                     isOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
-                <div className="flex items-center justify-between p-4 border-b border-gray-700">
-                    <div className="flex items-center space-x-2">
-                        <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                            <span className="text-white font-bold">S</span>
+                <div className="flex items-center justify-between p-6 border-b border-border">
+                    <div className="flex items-center space-x-3">
+                        {/* Logo Placeholder if image fails, but designed for image */}
+                        <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold shadow-sm">
+                            S
                         </div>
-                        <span className="text-xl font-bold text-white">Suppy</span>
+                        <span className="text-xl font-bold text-foreground tracking-tight">Suppy</span>
                     </div>
                     <button
                         onClick={onClose}
-                        className="md:hidden text-gray-400 hover:text-white"
+                        className="md:hidden text-muted-foreground hover:text-foreground"
                     >
-                        <X size={24} />
+                        <X size={20} />
                     </button>
                 </div>
 
-                <nav className="p-4 space-y-2">
+                <nav className="p-4 space-y-1">
                     {navItems.map((item) => (
                         <NavLink
                             key={item.path}
                             to={item.path}
-                            onClick={() => onClose()} // Close on mobile navigation
+                            onClick={() => onClose()}
                             className={({ isActive }) => clsx(
-                                "flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors",
+                                "flex items-center space-x-3 px-4 py-2.5 rounded-md transition-all duration-200 text-sm font-medium",
                                 isActive
-                                    ? "bg-blue-600 text-white"
-                                    : "text-gray-400 hover:bg-gray-700 hover:text-white"
+                                    ? "bg-primary/10 text-primary hover:bg-primary/15"
+                                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                             )}
                         >
-                            <item.icon size={20} />
-                            <span className="font-medium">{item.label}</span>
+                            <item.icon size={18} strokeWidth={2} />
+                            <span>{item.label}</span>
                         </NavLink>
                     ))}
                 </nav>
 
-                <div className="absolute bottom-0 w-full p-4 border-t border-gray-700">
+                <div className="absolute bottom-0 w-full p-4 border-t border-border bg-background">
                     <button
                         onClick={handleLogout}
-                        className="flex items-center space-x-3 px-4 py-3 w-full text-red-400 hover:bg-red-900/20 hover:text-red-300 rounded-lg transition-colors"
+                        className="flex items-center space-x-3 px-4 py-2.5 w-full text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-md transition-colors"
                     >
-                        <LogOut size={20} />
-                        <span className="font-medium">Sair</span>
+                        <LogOut size={18} />
+                        <span>Sair</span>
                     </button>
                 </div>
             </aside>
