@@ -5,6 +5,8 @@ import { MainLayout } from './components/Layout/MainLayout';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Clients } from './pages/Clients';
+import { Tasks } from './pages/Tasks';
+import { Notes } from './pages/Notes';
 
 function App() {
   return (
@@ -19,8 +21,8 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/clients" element={<Clients />} />
-              <Route path="/tasks" element={<div className="text-white p-4">Tela de Tarefas (Em Breve)</div>} />
-              <Route path="/notes" element={<div className="text-white p-4">Tela de Notas (Em Breve)</div>} />
+              <Route path="/tasks" element={<Tasks />} />
+              <Route path="/notes" element={<Notes />} />
             </Route>
           </Route>
 
