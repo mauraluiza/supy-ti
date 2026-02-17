@@ -9,7 +9,7 @@ export interface Client {
     encrypted_password?: string;
     cnpj?: string;
     contact_info: ContactInfo[];
-    integrations: IntegrationInfo[];
+    integrations: Integration[];
     created_at: string;
 }
 
@@ -19,10 +19,33 @@ export interface ContactInfo {
     name?: string;
 }
 
-export interface IntegrationInfo {
-    type: 'anydesk' | 'ifood' | 'anota_ai' | 'other';
-    access_info: any; // Can be string or object depending on type
+export type IntegrationType = 'anydesk' | 'ifood' | 'anota_ai';
+
+export interface BaseIntegration {
+    id: string; // Para controle de UI (remoção/edição)
+    type: IntegrationType;
 }
+
+export interface AnydeskIntegration extends BaseIntegration {
+    type: 'anydesk';
+    access: string;
+    password?: string;
+}
+
+export interface IfoodIntegration extends BaseIntegration {
+    type: 'ifood';
+    username: string;
+    password?: string;
+}
+
+export interface AnotaAiIntegration extends BaseIntegration {
+    type: 'anota_ai';
+    email: string;
+    password?: string;
+}
+
+export type Integration = AnydeskIntegration | IfoodIntegration | AnotaAiIntegration;
+
 
 export interface Task {
     id: string;
