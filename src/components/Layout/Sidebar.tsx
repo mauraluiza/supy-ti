@@ -23,7 +23,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         { icon: LayoutDashboard, label: 'Início', path: '/' },
         { icon: Users, label: 'Clientes', path: '/clients' },
         { icon: CheckSquare, label: 'Tarefas', path: '/tasks' },
-        { icon: StickyNote, label: 'Info. Gerais', path: '/notes' },
+        { icon: StickyNote, label: 'Notas', path: '/notes' },
     ];
 
     return (

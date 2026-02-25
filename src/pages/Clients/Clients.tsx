@@ -65,7 +65,7 @@ export function Clients() {
         <PageContainer>
             <PageHeader
                 title="Gerenciamento de Clientes"
-                description="Gerencie os acessos e informações dos clientes"
+                description="Gerencie os acessos e dados dos clientes"
                 icon={Users}
                 action={
                     <Button onClick={handleNew}>

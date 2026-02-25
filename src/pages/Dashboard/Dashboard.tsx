@@ -134,10 +134,10 @@ export function Dashboard() {
                 </div>
             </section>
 
-            {/* SEÇÃO 3: INFO GERAIS */}
+            {/* SEÇÃO 3: NOTAS RÁPIDAS */}
             <section className="space-y-4">
                 <DashboardSectionHeader
-                    title="Informações Rápidas"
+                    title="Notas Rápidas"
                     icon={<Star size={20} className="text-yellow-500" />}
                     navigateTo="/notes"
                 />
@@ -145,7 +145,7 @@ export function Dashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {notes.length === 0 ? (
                         <div className="col-span-full text-center py-6 text-muted-foreground border border-dashed border-border rounded-lg">
-                            Nenhuma informação cadastrada.
+                            Nenhuma nota cadastrada.
                         </div>
                     ) : (
                         notes.map((note) => (

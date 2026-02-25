@@ -97,13 +97,13 @@ export function Notes() {
     return (
         <PageContainer>
             <PageHeader
-                title="Informações Gerais"
+                title="Notas"
                 description="Procedimentos, senhas padrão, links úteis e conhecimentos da equipe."
                 icon={StickyNote}
                 action={
                     <Button onClick={handleOpenNewNote}>
                         <Plus size={16} className="mr-2" />
-                        Nova Informação
+                        Nova Nota
                     </Button>
                 }
             />
@@ -120,14 +120,14 @@ export function Notes() {
                 {loading ? (
                     <div className="text-center py-12">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                        <p className="text-muted-foreground mt-4 text-sm">Carregando informações...</p>
+                        <p className="text-muted-foreground mt-4 text-sm">Carregando notas...</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredNotes.length === 0 ? (
                             <div className="col-span-full">
                                 <EmptyState
-                                    title="Nenhuma informação encontrada"
+                                    title="Nenhuma nota encontrada"
                                     description={searchTerm ? "Não encontramos nada com esse termo." : "Cadastre procedimentos e senhas para facilitar o dia a dia."}
                                     icon={StickyNote}
                                     action={

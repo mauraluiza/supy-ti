@@ -129,7 +129,7 @@ export function ClientModal({ isOpen, onClose, onSuccess, clientToEdit }: Client
         >
             <ModalHeader
                 title={clientToEdit ? 'Editar Cliente' : 'Novo Cliente'}
-                description={clientToEdit ? 'Atualize as informações do cliente abaixo.' : 'Preencha os dados básicos e de acesso do novo cliente.'}
+                description={clientToEdit ? 'Atualize os dados do cliente abaixo.' : 'Preencha os dados básicos e de acesso do novo cliente.'}
                 onClose={onClose}
             />
 

@@ -94,8 +94,8 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
     return (
         <Modal isOpen={isOpen} onClose={onClose} width="lg">
             <ModalHeader
-                title={noteToEdit ? 'Editar Informação' : 'Nova Informação'}
-                description={noteToEdit ? 'Edite os detalhes da anotação.' : 'Crie uma nova anotação ou informação geral.'}
+                title={noteToEdit ? 'Editar Nota' : 'Nova Nota'}
+                description={noteToEdit ? 'Edite os detalhes da anotação.' : 'Crie uma nova nota ou procedimento geral.'}
                 onClose={onClose}
             >
                 <Button
@@ -142,7 +142,7 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
                             <RichTextEditor
                                 content={content}
                                 onChange={setContent}
-                                placeholder="Descreva as informações aqui..."
+                                placeholder="Descreva os detalhes da nota aqui..."
                                 className="h-full flex flex-col"
                             />
                         </div>
@@ -156,7 +156,7 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
                                 <div className="flex-1">
                                     <h4 className="text-sm font-medium text-red-800 dark:text-red-300">Confirmar exclusão?</h4>
                                     <p className="text-xs text-red-700 dark:text-red-400 mt-1">
-                                        Esta ação removerá permanentemente esta informação.
+                                        Esta ação removerá permanentemente esta nota.
                                     </p>
                                     <div className="flex gap-2 mt-3">
                                         <Button
@@ -214,7 +214,7 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
                             className="gap-2"
                         >
                             <Save size={16} />
-                            {loading ? 'Salvando...' : 'Salvar Informação'}
+                            {loading ? 'Salvando...' : 'Salvar Nota'}
                         </Button>
                     </div>
                 </ModalFooter>

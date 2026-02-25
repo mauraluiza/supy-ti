@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './routes/ProtectedRoute';
-import { MainLayout } from './components/Layout/MainLayout';
+import { MainLayout } from './components/layout/MainLayout';
 import { Login } from './pages/Login/Login';
 import { Dashboard } from './pages/Dashboard/Dashboard';
 import { Clients } from './pages/Clients/Clients';
 import { Tasks } from './pages/Tasks/Tasks';
-import { Notes } from './pages/Info/Info';
+import { Notes } from './pages/Notes/Notes';
 
 function App() {
   return (
