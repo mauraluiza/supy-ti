@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import { Input } from "../../ui/input";
-import { cn } from "../../../lib/utils";
+import { cn } from "../../../utils/utils";
 
 interface PageSearchProps {
     value: string;

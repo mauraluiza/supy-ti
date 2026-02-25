@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Trash2, AlertCircle, Star } from 'lucide-react';
-import { noteService } from '../../services/noteService';
-import { useAuth } from '../../context/AuthContext';
-import type { Note } from '../../types';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '../ui/modal';
-import { Button } from '../ui/button';
-import { RichTextEditor } from '../ui/rich-text-editor';
-import { cn } from '../../lib/utils';
+import { noteService } from '../services/supabase';
+import { useAuth } from '../context/AuthContext';
+import type { Note } from '../types';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from '../components/ui/modal';
+import { Button } from '../components/ui/button';
+import { RichTextEditor } from '../components/ui/rich-text-editor';
+import { cn } from '../utils/utils';
 
 interface NoteModalProps {
     isOpen: boolean;

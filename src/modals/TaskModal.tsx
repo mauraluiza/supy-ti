@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Trash2, AlertCircle } from 'lucide-react';
-import { taskService } from '../../services/taskService';
-import { clientService } from '../../services/clientService';
-import { useAuth } from '../../context/AuthContext';
-import type { Task } from '../../types';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '../ui/modal';
-import { Button } from '../ui/button';
-import { RichTextEditor } from '../ui/rich-text-editor';
+import { taskService, clientService } from '../services/supabase';
+import { useAuth } from '../context/AuthContext';
+import type { Task } from '../types';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from '../components/ui/modal';
+import { Button } from '../components/ui/button';
+import { RichTextEditor } from '../components/ui/rich-text-editor';
 
 interface TaskModalProps {
     isOpen: boolean;

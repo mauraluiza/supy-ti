@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Users, Clock, Star } from 'lucide-react';
-import { clientService } from '../services/clientService';
-import { taskService } from '../services/taskService';
-import { noteService } from '../services/noteService';
-import { DashboardSectionHeader } from '../components/Dashboard/DashboardSectionHeader';
+import { clientService, taskService, noteService } from '../../services/supabase';
+import { DashboardSectionHeader } from '../../components/shared/DashboardSectionHeader';
 import clsx from 'clsx';
-import type { Client, Task, Note } from '../types';
+import type { Client, Task, Note } from '../../types';
 
 export function Dashboard() {
     const [clients, setClients] = useState<Client[]>([]);

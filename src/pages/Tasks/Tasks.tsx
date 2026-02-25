@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { taskService } from '../services/taskService';
-import type { Task } from '../types';
+import { taskService } from '../../services/supabase';
+import type { Task } from '../../types';
 import { CheckSquare, Plus } from 'lucide-react';
-import { TaskCard } from '../components/Tasks/TaskCard';
-import { TaskModal } from '../components/Tasks/TaskModal';
-import { Button } from '../components/ui/button';
-import { PageContainer } from '../components/Layout/Page/PageContainer';
-import { PageHeader } from '../components/Layout/Page/PageHeader';
-import { PageSearch } from '../components/Layout/Page/PageSearch';
-import { EmptyState } from '../components/ui/empty-state';
+import { TaskCard } from '../../components/shared/TaskCard';
+import { TaskModal } from '../../modals/TaskModal';
+import { Button } from '../../components/ui/button';
+import { PageContainer } from '../../components/layout/page/PageContainer';
+import { PageHeader } from '../../components/layout/page/PageHeader';
+import { PageSearch } from '../../components/layout/page/PageSearch';
+import { EmptyState } from '../../components/ui/empty-state';
 
 export function Tasks() {
     const [tasks, setTasks] = useState<Task[]>([]);

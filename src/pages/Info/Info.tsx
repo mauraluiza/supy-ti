@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { noteService } from '../services/noteService';
-import type { Note } from '../types';
+import { noteService } from '../../services/supabase';
+import type { Note } from '../../types';
 import { StickyNote, Plus } from 'lucide-react';
-import { NoteCard } from '../components/Notes/NoteCard';
-import { Button } from '../components/ui/button';
-import { PageContainer } from '../components/Layout/Page/PageContainer';
-import { PageHeader } from '../components/Layout/Page/PageHeader';
-import { PageSearch } from '../components/Layout/Page/PageSearch';
-import { EmptyState } from '../components/ui/empty-state';
-import { NoteModal } from '../components/Notes/NoteModal';
+import { NoteCard } from '../../components/shared/NoteCard';
+import { Button } from '../../components/ui/button';
+import { PageContainer } from '../../components/layout/page/PageContainer';
+import { PageHeader } from '../../components/layout/page/PageHeader';
+import { PageSearch } from '../../components/layout/page/PageSearch';
+import { EmptyState } from '../../components/ui/empty-state';
+import { NoteModal } from '../../modals/NoteModal';
 
 export function Notes() {
     const [notes, setNotes] = useState<Note[]>([]);

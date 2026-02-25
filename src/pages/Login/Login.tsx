@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { Loader2 } from 'lucide-react';
-import { AppLogo } from '../components/ui/app-logo';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Card, CardHeader, CardContent, CardDescription, CardTitle } from '../components/ui/card';
+import { AppLogo } from '../../components/ui/app-logo';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Card, CardHeader, CardContent, CardDescription, CardTitle } from '../../components/ui/card';
 
 export function Login() {
     const [email, setEmail] = useState('');
@@ -47,8 +47,8 @@ export function Login() {
                 <CardContent>
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div className="space-y-2">
-                            <label 
-                                htmlFor="email" 
+                            <label
+                                htmlFor="email"
                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                                 Email
@@ -66,8 +66,8 @@ export function Login() {
                         </div>
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <label 
-                                    htmlFor="password" 
+                                <label
+                                    htmlFor="password"
                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
                                     Senha

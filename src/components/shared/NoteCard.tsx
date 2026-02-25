@@ -4,7 +4,7 @@ import { ptBR } from "date-fns/locale";
 import type { Note } from "../../types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import { cn } from "../../lib/utils";
+import { cn } from "../../utils/utils";
 
 interface NoteCardProps {
     note: Note;

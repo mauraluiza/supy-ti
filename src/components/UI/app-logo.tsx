@@ -1,5 +1,5 @@
 import { APP_CONFIG } from "../../config/app";
-import { cn } from "../../lib/utils";
+import { cn } from "../../utils/utils";
 
 interface AppLogoProps {
     className?: string;

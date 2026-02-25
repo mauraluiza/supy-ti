@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Monitor, Utensils, Receipt, Plus, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { cn } from '../../lib/utils';
+import { cn } from '../../utils/utils';
 import type { Integration, IntegrationType, AnydeskIntegration, IfoodIntegration, AnotaAiIntegration } from '../../types';
 
 interface ClientIntegrationsProps {

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { clientService } from '../services/clientService';
-import type { Client } from '../types';
+import { clientService } from '../../services/supabase';
+import type { Client } from '../../types';
 import { Plus, Edit, Trash2, Users } from 'lucide-react';
-import { ClientModal } from '../components/Clients/ClientModal';
-import { useEncryption } from '../hooks/useEncryption';
-import { PageContainer } from '../components/Layout/Page/PageContainer';
-import { PageHeader } from '../components/Layout/Page/PageHeader';
-import { PageSearch } from '../components/Layout/Page/PageSearch';
-import { Button } from '../components/ui/button';
-import { EmptyState } from '../components/ui/empty-state';
+import { ClientModal } from '../../modals/ClientModal';
+import { useEncryption } from '../../hooks/useEncryption';
+import { PageContainer } from '../../components/layout/page/PageContainer';
+import { PageHeader } from '../../components/layout/page/PageHeader';
+import { PageSearch } from '../../components/layout/page/PageSearch';
+import { Button } from '../../components/ui/button';
+import { EmptyState } from '../../components/ui/empty-state';
 
 export function Clients() {
     const { decryptData } = useEncryption();

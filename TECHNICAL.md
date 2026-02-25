@@ -20,18 +20,21 @@ A organização do código segue o padrão de separação de responsabilidades:
 
 ```bash
 src/
-├── assets/          # Recursos estáticos (imagens, fontes)
+├── assets/          # Recursos estáticos (mídias, vetores)
 ├── components/      # Componentes React
-│   ├── Dashboard/   # Componentes específicos do Dashboard (DashboardSectionHeader)
-│   ├── Layout/      # Estruturas de página (Sidebar, Header, MainContainer)
-│   └── UI/          # Componentes visuais genéricos (Button, Input, Card, Modal)
+│   ├── layout/      # Estratégia de containers e estrutura (MainLayout, Sidebar)
+│   │   └── page/    # Componentes de estrutura de página (PageHeader, Container)
+│   ├── shared/      # Componentes de negócio reutilizáveis (Cards, Headers)
+│   └── ui/          # Componentes atômicos (Button, Input, Modal base)
 ├── context/         # Gerenciamento de estado global (AuthContext)
-├── hooks/           # Lógica reutilizável (useAuth)
-├── pages/           # Páginas da aplicação (Dashboard, Clients, Tasks, Notes)
-├── services/        # Camada de Serviços (api/CRUD encapsulado)
-├── styles/          # Configurações globais de estilo (Tailwind, CSS)
+├── hooks/           # Lógica reutilizável (useEncryption, etc.)
+├── modals/          # Camada de formulários de negócio (ClientModal, TaskModal)
+├── pages/           # Módulos de página agrupados por diretórios (Login, Dashboard, Clients...)
+├── routes/          # Definições de rotas e segurança (ProtectedRoute)
+├── services/        # Camada de dados (Supabase)
+├── styles/          # Configurações globais de estilo (CSS)
 ├── types/           # Definições de tipos TypeScript
-└── utils/           # Funções auxiliares (formatters, constants)
+└── utils/           # Funções auxiliares (cn, utils)
 ```
 
 ---
@@ -68,16 +71,16 @@ Anotações gerais.
 
 ---
 
-## 4. Camada de Serviços (Services)
-
-A aplicação utiliza uma camada de serviços para isolar a lógica de comunicação com o Supabase:
+## 4. Camada de Dados e Serviços
+A aplicação utiliza uma camada de serviços isolada dentro de `services/supabase/` para encapsular a lógica de comunicação:
 
 - **`clientService.ts`**: Gerenciamento de clientes (CRUD).
 - **`taskService.ts`**: Gerenciamento de tarefas (CRUD com Join de clientes).
 - **`noteService.ts`**: Gerenciamento de anotações (CRUD).
-- **`index.ts`**: Barrel file para exportação centralizada dos serviços.
+- **`supabaseClient.ts`**: Instância configurada do cliente Supabase.
+- **`index.ts`**: Barrel file para exportação centralizada.
 
-Esta camada garante que o frontend não precise manipular diretamente o cliente do Supabase e facilita a manutenção e substituição de lógica de dados.
+Esta camada garante o isolamento da infraestrutura, permitindo que o frontend consuma dados de forma agnóstica à API subjacente.
 
 ---
 

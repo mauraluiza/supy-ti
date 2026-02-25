@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Lock, User, Building2, KeyRound } from 'lucide-react';
-import { clientService } from '../../services/clientService';
-import { useAuth } from '../../context/AuthContext';
-import { useEncryption } from '../../hooks/useEncryption';
-import { ClientIntegrations } from './ClientIntegrations';
-import type { Integration } from '../../types';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from '../ui/modal';
-import { Button } from '../ui/button';
+import { clientService } from '../services/supabase';
+import { useAuth } from '../context/AuthContext';
+import { useEncryption } from '../hooks/useEncryption';
+import { ClientIntegrations } from '../components/shared/ClientIntegrations';
+import type { Integration } from '../types';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from '../components/ui/modal';
+import { Button } from '../components/ui/button';
 
 interface ClientModalProps {
     isOpen: boolean;
