@@ -1,9 +1,7 @@
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import type { Task } from "../../types";
 import { Clock, CheckSquare, AlertCircle, PlayCircle } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
-import { cn } from "../../lib/utils";
+import { cn, formatRelativeTime } from "../../lib/utils";
 
 interface TaskCardProps {
     task: Task;
@@ -54,13 +52,13 @@ export function TaskCard({ task, onEdit, interactive = true }: TaskCardProps) {
             onClick={() => interactive && onEdit?.(task)}
         >
             <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                    <span className={cn("text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1", config.color)}>
+                <div className="flex justify-between items-start gap-2">
+                    <span className={cn("text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1 shrink-0", config.color)}>
                         <StatusIcon size={12} />
                         {config.label}
                     </span>
-                    <span className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(new Date(task.created_at), { addSuffix: true, locale: ptBR })}
+                    <span className="text-xs text-muted-foreground whitespace-nowrap mt-1 min-w-max">
+                        {formatRelativeTime(task.created_at)}
                     </span>
                 </div>
                 <CardTitle className="text-lg font-bold leading-tight mt-2 text-foreground break-words line-clamp-1">

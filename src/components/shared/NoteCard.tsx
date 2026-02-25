@@ -1,10 +1,8 @@
 import { Star, Edit, Trash2 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import type { Note } from "../../types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
-import { cn } from "../../lib/utils";
+import { cn, formatRelativeTime } from "../../lib/utils";
 
 interface NoteCardProps {
     note: Note;
@@ -34,32 +32,34 @@ export function NoteCard({ note, onEdit, onDelete, onToggleFavorite, interactive
 
             <CardHeader className="pb-2 space-y-0">
                 <div className="flex justify-between items-start gap-2">
-                    <CardTitle className="text-lg font-bold leading-tight text-foreground line-clamp-2">
+                    <CardTitle className="text-lg font-bold leading-tight text-foreground line-clamp-2 break-words">
                         {note.title}
                     </CardTitle>
-                    {interactive ? (
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleFavorite?.(note);
-                            }}
-                            className="text-muted-foreground hover:text-yellow-500 transition-colors focus:outline-none"
-                        >
-                            <Star
-                                size={18}
-                                className={cn(
-                                    "transition-all",
-                                    note.is_favorite ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/50 hover:text-yellow-400"
-                                )}
-                            />
-                        </button>
-                    ) : (
-                        note.is_favorite && <Star size={18} className="fill-yellow-400 text-yellow-400" />
-                    )}
+                    <div className="flex items-center gap-2 shrink-0 mt-0.5">
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                            {formatRelativeTime(note.updated_at || note.created_at)}
+                        </span>
+                        {interactive ? (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onToggleFavorite?.(note);
+                                }}
+                                className="text-muted-foreground hover:text-yellow-500 transition-colors focus:outline-none"
+                            >
+                                <Star
+                                    size={18}
+                                    className={cn(
+                                        "transition-all",
+                                        note.is_favorite ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/50 hover:text-yellow-400"
+                                    )}
+                                />
+                            </button>
+                        ) : (
+                            note.is_favorite && <Star size={18} className="fill-yellow-400 text-yellow-400" />
+                        )}
+                    </div>
                 </div>
-                <span className="text-xs text-muted-foreground block mt-1">
-                    Atualizado {formatDistanceToNow(new Date(note.updated_at || note.created_at), { addSuffix: true, locale: ptBR })}
-                </span>
             </CardHeader>
 
             <CardContent className="flex-grow">
