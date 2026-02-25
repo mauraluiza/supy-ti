@@ -22,59 +22,83 @@ A organização do código segue o padrão de separação de responsabilidades:
 src/
 ├── assets/          # Recursos estáticos (imagens, fontes)
 ├── components/      # Componentes React
+│   ├── Dashboard/   # Componentes específicos do Dashboard (DashboardSectionHeader)
 │   ├── Layout/      # Estruturas de página (Sidebar, Header, MainContainer)
 │   └── UI/          # Componentes visuais genéricos (Button, Input, Card, Modal)
-├── context/         # Gerenciamento de estado global (AuthContext, ThemeContext)
-├── hooks/           # Lógica reutilizável (useAuth, useSupabase, useEncryption)
-├── pages/           # Páginas da aplicação (Dashboard, Clients, Tasks)
-├── services/        # Integrações externas (api.ts, supabaseClient.ts)
-├── styles/          # Configurações globais de estilo
-├── types/           # Definições de tipos TypeScript (Interfaces de dados)
-└── utils/           # Funções auxiliares puras (formatDate, validators)
+├── context/         # Gerenciamento de estado global (AuthContext)
+├── hooks/           # Lógica reutilizável (useAuth)
+├── pages/           # Páginas da aplicação (Dashboard, Clients, Tasks, Notes)
+├── services/        # Camada de Serviços (api/CRUD encapsulado)
+├── styles/          # Configurações globais de estilo (Tailwind, CSS)
+├── types/           # Definições de tipos TypeScript
+└── utils/           # Funções auxiliares (formatters, constants)
 ```
 
 ---
 
 ## 3. Modelo de Dados (Banco de Dados)
 
-O banco de dados PostgreSQL no Supabase possui 3 tabelas principais, todas protegidas por RLS.
+O banco de dados PostgreSQL no Supabase possui 3 tabelas principais, protegidas por RLS e com timestamps padronizados.
 
 ### Tabela `clients`
 Armazena os clientes do sistema.
 - **id (UUID):** Identificador único.
-- **user_id (UUID):** Vínculo com o usuário dono do registro (Segurança RLS).
+- **user_id (UUID):** Vínculo com o usuário dono do registro.
 - **name (Text):** Nome do cliente.
 - **system (Text):** 'winfood' | 'cplug'.
 - **status (Text):** 'implantation' | 'active' | 'inactive'.
-- **encrypted_password (Text):** Senha do cliente criptografada (AES-256).
-- **contact_info (JSONB):** Array de contatos.
-- **integrations (JSONB):** Dados de integração (Anydesk, iFood).
+- **encrypted_password (Text):** Senha criptografada.
+- **created_at / updated_at:** Timestamps automáticos (Gerenciados via Trigger).
 
 ### Tabela `tasks`
 Tarefas vinculadas a clientes.
 - **id (UUID):** Identificador único.
-- **client_id (UUID):** Chave estrangeira para `clients`.
-- **description (Text):** Texto rico / markdown.
+- **client_id (UUID):** FK para `clients`.
+- **description (Text):** Conteúdo da tarefa (HTML/Rich Text).
 - **status (Text):** 'urgent' | 'in_progress' | 'pending' | 'done'.
+- **created_at / updated_at:** Timestamps automáticos.
 
 ### Tabela `notes`
-Anotações gerais e rápidas.
+Anotações gerais.
+- **id (UUID):** Identificador único.
 - **title (Text):** Título da nota.
-- **content (Text):** Conteúdo.
+- **content (Text):** Conteúdo enriquecido.
 - **is_favorite (Boolean):** Flag de destaque.
+- **created_at / updated_at:** Timestamps automáticos.
 
 ---
 
-## 4. Segurança
+## 4. Camada de Serviços (Services)
+
+A aplicação utiliza uma camada de serviços para isolar a lógica de comunicação com o Supabase:
+
+- **`clientService.ts`**: Gerenciamento de clientes (CRUD).
+- **`taskService.ts`**: Gerenciamento de tarefas (CRUD com Join de clientes).
+- **`noteService.ts`**: Gerenciamento de anotações (CRUD).
+- **`index.ts`**: Barrel file para exportação centralizada dos serviços.
+
+Esta camada garante que o frontend não precise manipular diretamente o cliente do Supabase e facilita a manutenção e substituição de lógica de dados.
+
+---
+
+## 5. Automação e Timestamps
+
+Foi implementada uma padronização via SQL para garantir a integridade dos dados temporais:
+
+- **Função `update_updated_at_column()`**: Função em PL/pgSQL que atualiza automaticamente o campo `updated_at` para o tempo atual.
+- **Triggers**: Configurados em todas as tabelas (`clients`, `tasks`, `notes`) para disparar a função de atualização `BEFORE UPDATE`.
+- **Frontend**: O frontend não envia manualmente campos de data, delegando a responsabilidade total ao banco de dados (`DEFAULT NOW()`).
+
+---
+
+## 6. Segurança
 
 ### Autenticação
-Gerenciada pelo Supabase Auth (Email/Senha ou OAuth).
+Gerenciada pelo Supabase Auth.
 
 ### Autorização (RLS)
 Todas as tabelas possuem Row Level Security ativado.
 Política padrão: `auth.uid() == user_id`.
-Isso garante que um usuário jamais acesse dados de outro, mesmo se fizer requisições diretas à API.
 
 ### Criptografia de Dados Sensíveis
-Senhas de clientes (Winfood/Cplug) e acessos remotos (Anydesk) são criptografados no cliente (Frontend) antes de serem enviados ao banco.
-A chave de criptografia nunca é salva no banco de dados.
+Senhas são criptografadas no frontend antes da persistência.
