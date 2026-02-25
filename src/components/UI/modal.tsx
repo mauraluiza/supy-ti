@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import { cn } from '../../utils/utils';
+import { cn } from '../../lib/utils';
 import { Button } from './button';
 
 interface ModalProps {

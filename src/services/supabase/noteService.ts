@@ -1,4 +1,4 @@
-import { supabase } from './supabaseClient';
+import { supabase } from '../../lib/supabase';
 import type { Note } from '../types';
 
 export const noteService = {

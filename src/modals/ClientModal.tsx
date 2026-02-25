@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Lock, User, Building2, KeyRound } from 'lucide-react';
 import { clientService } from '../services/supabase';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useEncryption } from '../hooks/useEncryption';
 import { ClientIntegrations } from '../components/shared/ClientIntegrations';
 import type { Integration } from '../types';

@@ -26,15 +26,16 @@ src/
 │   │   └── page/    # Componentes de estrutura de página (PageHeader, Container)
 │   ├── shared/      # Componentes de negócio reutilizáveis (Cards, Headers)
 │   └── ui/          # Componentes atômicos (Button, Input, Modal base)
-├── context/         # Gerenciamento de estado global (AuthContext)
-├── hooks/           # Lógica reutilizável (useEncryption, etc.)
-├── modals/          # Camada de formulários de negócio (ClientModal, TaskModal)
-├── pages/           # Módulos de página agrupados por diretórios (Login, Dashboard, Clients...)
+├── config/          # Configurações globais e constantes da aplicação
+├── contexts/        # Gerenciamento de estado global (Context API - Auth)
+├── hooks/           # Lógica reutilizável e hooks customizados
+├── lib/             # Utilitários core e instâncias de SDKs (Supabase client, cn utils)
+├── modals/          # Camada de formulários e diálogos de negócio
+├── pages/           # Módulos de página agrupados por diretórios
 ├── routes/          # Definições de rotas e segurança (ProtectedRoute)
-├── services/        # Camada de dados (Supabase)
-├── styles/          # Configurações globais de estilo (CSS)
-├── types/           # Definições de tipos TypeScript
-└── utils/           # Funções auxiliares (cn, utils)
+├── services/        # Camada de dados (CRUDs isolados do Supabase)
+├── styles/          # Configurações globais de estilo e tokens CSS
+├── types/           # Definições de tipos e interfaces TypeScript
 ```
 
 ---
@@ -72,15 +73,15 @@ Anotações gerais.
 ---
 
 ## 4. Camada de Dados e Serviços
-A aplicação utiliza uma camada de serviços isolada dentro de `services/supabase/` para encapsular a lógica de comunicação:
+A aplicação utiliza uma camada de serviços isolada para encapsular a lógica de comunicação, dependendo de instâncias configuradas na pasta `lib/`:
 
-- **`clientService.ts`**: Gerenciamento de clientes (CRUD).
-- **`taskService.ts`**: Gerenciamento de tarefas (CRUD com Join de clientes).
-- **`noteService.ts`**: Gerenciamento de anotações (CRUD).
-- **`supabaseClient.ts`**: Instância configurada do cliente Supabase.
-- **`index.ts`**: Barrel file para exportação centralizada.
+- **`src/lib/supabase.ts`**: Instância central configurada do cliente Supabase.
+- **`src/services/supabase/clientService.ts`**: Gerenciamento de clientes (CRUD).
+- **`src/services/supabase/taskService.ts`**: Gerenciamento de tarefas (CRUD com Join de clientes).
+- **`src/services/supabase/noteService.ts`**: Gerenciamento de anotações (CRUD).
+- **`src/services/supabase/index.ts`**: Exportação centralizada (Barrel file).
 
-Esta camada garante o isolamento da infraestrutura, permitindo que o frontend consuma dados de forma agnóstica à API subjacente.
+Esta arquitetura garante que o frontend consuma dados de forma agnóstica à infraestrutura, facilitando mocks e testes.
 
 ---
 

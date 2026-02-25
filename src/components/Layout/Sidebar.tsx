@@ -2,7 +2,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AppLogo } from "../ui/app-logo";
 import { LayoutDashboard, Users, CheckSquare, StickyNote, LogOut, X } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import clsx from 'clsx';
 
 interface SidebarProps {

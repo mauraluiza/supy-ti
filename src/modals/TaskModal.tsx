@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Trash2, AlertCircle } from 'lucide-react';
 import { taskService, clientService } from '../services/supabase';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import type { Task } from '../types';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from '../components/ui/modal';
 import { Button } from '../components/ui/button';

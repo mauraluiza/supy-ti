@@ -3,7 +3,7 @@ import { ptBR } from "date-fns/locale";
 import type { Task } from "../../types";
 import { Clock, CheckSquare, AlertCircle, PlayCircle } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
-import { cn } from "../../utils/utils";
+import { cn } from "../../lib/utils";
 
 interface TaskCardProps {
     task: Task;
