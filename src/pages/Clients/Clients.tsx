@@ -9,7 +9,7 @@ import { PageHeader } from '../../components/layout/page/PageHeader';
 import { PageSearch } from '../../components/layout/page/PageSearch';
 import { Button } from '../../components/ui/button';
 import { EmptyState } from '../../components/ui/empty-state';
-import { getClientRowClass } from '../../lib/utils';
+import { getClientRowClass, getActiveClients, getInactiveClients } from '../../lib/utils';
 
 export function Clients() {
     const { decryptData } = useEncryption();
@@ -17,6 +17,7 @@ export function Clients() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showInactive, setShowInactive] = useState(false);
     const [editingClient, setEditingClient] = useState<Client | undefined>(undefined);
 
     const fetchClients = async () => {
@@ -57,7 +58,12 @@ export function Clients() {
         setIsModalOpen(true);
     }
 
-    const filteredClients = clients.filter(client =>
+    const activeClients = getActiveClients(clients);
+    const inactiveClients = getInactiveClients(clients);
+
+    const displayedClients = showInactive ? inactiveClients : activeClients;
+
+    const filteredClients = displayedClients.filter(client =>
         client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         client.system_login?.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -77,13 +83,29 @@ export function Clients() {
             />
 
             <div className="flex flex-col space-y-4">
-                <PageSearch
-                    value={searchTerm}
-                    onChange={setSearchTerm}
-                    placeholder="Buscar por nome, usuário ou sistema..."
-                    totalResultCount={clients.length}
-                    filteredResultCount={filteredClients.length}
-                />
+                <div className="flex items-center gap-3">
+                    <PageSearch
+                        value={searchTerm}
+                        onChange={setSearchTerm}
+                        placeholder="Buscar por nome, usuário ou sistema..."
+                        totalResultCount={displayedClients.length}
+                        filteredResultCount={filteredClients.length}
+                    />
+                    {inactiveClients.length > 0 && (
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setShowInactive(!showInactive)}
+                            className={
+                                showInactive
+                                    ? "bg-gray-600 hover:bg-gray-700 text-white dark:bg-gray-600 dark:hover:bg-gray-500"
+                                    : "bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300"
+                            }
+                        >
+                            Inativos ({inactiveClients.length})
+                        </Button>
+                    )}
+                </div>
 
                 {/* Table */}
                 {loading ? (

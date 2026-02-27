@@ -48,3 +48,11 @@ export function getClientRowClass(client: { system?: string, status?: string }) 
 
     return baseClass;
 }
+
+export function getActiveClients<T extends { status?: string }>(clients: T[]): T[] {
+    return clients.filter(c => c.status !== 'inactive');
+}
+
+export function getInactiveClients<T extends { status?: string }>(clients: T[]): T[] {
+    return clients.filter(c => c.status === 'inactive');
+}

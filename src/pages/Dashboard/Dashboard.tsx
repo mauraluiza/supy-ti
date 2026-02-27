@@ -7,7 +7,7 @@ import { NoteCard } from '../../components/shared/NoteCard';
 import { Button } from '../../components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import { getClientRowClass } from '../../lib/utils';
+import { getClientRowClass, getActiveClients } from '../../lib/utils';
 import type { Client, Task, Note } from '../../types';
 
 export function Dashboard() {
@@ -30,7 +30,8 @@ export function Dashboard() {
                 ]);
 
                 // Limit for dashboard display
-                setClients(clientsData.slice(0, 5));
+                const dashActiveClients = getActiveClients(clientsData);
+                setClients(dashActiveClients.slice(0, 5));
                 setTasks(tasksData.slice(0, 5));
                 setNotes(notesData.slice(0, 3));
             } catch (error) {
