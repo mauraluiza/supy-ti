@@ -9,6 +9,7 @@ import { PageHeader } from '../../components/layout/page/PageHeader';
 import { PageSearch } from '../../components/layout/page/PageSearch';
 import { Button } from '../../components/ui/button';
 import { EmptyState } from '../../components/ui/empty-state';
+import { getClientRowClass } from '../../lib/utils';
 
 export function Clients() {
     const { decryptData } = useEncryption();
@@ -101,7 +102,7 @@ export function Clients() {
                                         <th className="px-6 py-3 font-medium text-muted-foreground text-right">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-border">
+                                <tbody className="divide-y">
                                     {filteredClients.length === 0 ? (
                                         <tr>
                                             <td colSpan={4} className="p-4">
@@ -115,12 +116,8 @@ export function Clients() {
                                         </tr>
                                     ) : (
                                         filteredClients.map(client => {
-                                            // Visual Logic
+                                            // Badge Logic
                                             const isWinfood = client.system === 'winfood';
-                                            const rowClass = isWinfood
-                                                ? "bg-red-50/30 hover:bg-red-50/50 dark:bg-red-900/10 dark:hover:bg-red-900/20"
-                                                : "bg-blue-50/30 hover:bg-blue-50/50 dark:bg-blue-900/10 dark:hover:bg-blue-900/20";
-
                                             const badgeClass = isWinfood
                                                 ? "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800"
                                                 : "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800";
@@ -128,7 +125,7 @@ export function Clients() {
                                             const pass = client.encrypted_password ? decryptData(client.encrypted_password) : '---';
 
                                             return (
-                                                <tr key={client.id} className={`transition-colors border-l-4 ${isWinfood ? 'border-l-red-500' : 'border-l-blue-500'} ${rowClass}`}>
+                                                <tr key={client.id} className={getClientRowClass(client)}>
                                                     <td className="px-6 py-4">
                                                         <div className="font-medium text-foreground text-base">{client.name}</div>
                                                         <div className="flex items-center gap-2 mt-1">

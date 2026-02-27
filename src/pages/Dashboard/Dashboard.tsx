@@ -7,6 +7,7 @@ import { NoteCard } from '../../components/shared/NoteCard';
 import { Button } from '../../components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { getClientRowClass } from '../../lib/utils';
 import type { Client, Task, Note } from '../../types';
 
 export function Dashboard() {
@@ -90,7 +91,7 @@ export function Dashboard() {
                                     <th className="px-4 py-2 font-medium">Senha</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-border">
+                            <tbody className="divide-y">
                                 {clients.length === 0 ? (
                                     <tr>
                                         <td colSpan={5} className="px-4 py-3 text-center text-muted-foreground">
@@ -103,10 +104,7 @@ export function Dashboard() {
                                         return (
                                             <tr
                                                 key={client.id}
-                                                className={clsx(
-                                                    "",
-                                                    isCplug ? "dark:bg-blue-950/10" : "dark:bg-red-950/10"
-                                                )}
+                                                className={getClientRowClass(client)}
                                             >
                                                 <td className="px-4 py-3">
                                                     <span className={clsx(
