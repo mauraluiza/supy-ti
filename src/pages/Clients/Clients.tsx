@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { clientService } from '../../services/supabase';
 import type { Client } from '../../types';
-import { Plus, Edit, Trash2, Users, Filter, ChevronDown, X } from 'lucide-react';
+import { Plus, Edit, Trash2, Users, Filter, ChevronDown, X, Copy } from 'lucide-react';
 import { ClientModal } from '../../modals/ClientModal';
 import { useEncryption } from '../../hooks/useEncryption';
 import { PageContainer } from '../../components/layout/page/PageContainer';
@@ -102,6 +102,14 @@ export function Clients() {
     }, [filteredClients, currentPage]);
 
     const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+
+    const copyToClipboard = async (value: string) => {
+        try {
+            await navigator.clipboard.writeText(value);
+        } catch (err) {
+            console.error("Erro ao copiar:", err);
+        }
+    };
 
     return (
         <PageContainer>
@@ -290,26 +298,30 @@ export function Clients() {
                                                     <td className="px-6 py-2.5 align-middle">
                                                         <div className="flex items-center gap-3 flex-wrap text-sm">
                                                             {isWinfood ? (
-                                                                <div className="flex items-center gap-1">
+                                                                <div className="flex items-center gap-1 group cursor-pointer" onClick={() => client.system_login && copyToClipboard(client.system_login)} title="Copiar operador">
                                                                     <span className="text-muted-foreground">Operador:</span> <span className="font-medium text-foreground">{client.system_login || '-'}</span>
+                                                                    {client.system_login && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
                                                                 </div>
                                                             ) : (
                                                                 <>
-                                                                    <div className="flex items-center gap-1">
+                                                                    <div className="flex items-center gap-1 group cursor-pointer" onClick={() => client.login_code && copyToClipboard(client.login_code)} title="Copiar código">
                                                                         <span className="text-muted-foreground">Cód:</span> <span className="font-mono font-medium text-foreground">{client.login_code || '-'}</span>
+                                                                        {client.login_code && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
                                                                     </div>
                                                                     <span className="text-muted-foreground">•</span>
-                                                                    <div className="flex items-center gap-1">
+                                                                    <div className="flex items-center gap-1 group cursor-pointer" onClick={() => client.system_login && copyToClipboard(client.system_login)} title="Copiar usuário">
                                                                         <span className="text-muted-foreground">Usuário:</span> <span className="font-medium text-foreground">{client.system_login || '-'}</span>
+                                                                        {client.system_login && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
                                                                     </div>
                                                                 </>
                                                             )}
                                                             <span className="text-muted-foreground">•</span>
-                                                            <div className="flex items-center gap-1 group cursor-pointer" title="Clique para copiar (futuro)">
+                                                            <div className="flex items-center gap-1 group cursor-pointer" onClick={() => pass !== '---' && copyToClipboard(pass)} title="Copiar senha">
                                                                 <span className="text-muted-foreground">Senha:</span>
                                                                 <span className="font-mono bg-background px-1 rounded border border-border text-foreground text-xs">
                                                                     {pass}
                                                                 </span>
+                                                                {pass !== '---' && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
                                                             </div>
                                                         </div>
                                                     </td>
