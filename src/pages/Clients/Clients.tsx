@@ -248,10 +248,10 @@ export function Clients() {
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-muted/50 border-b border-border">
                                     <tr>
-                                        <th className="px-6 py-3 font-medium text-muted-foreground">Cliente / Sistema</th>
-                                        <th className="px-6 py-3 font-medium text-muted-foreground">Acesso</th>
-                                        <th className="px-6 py-3 font-medium text-muted-foreground">Status</th>
-                                        <th className="px-6 py-3 font-medium text-muted-foreground text-right">Ações</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Cliente / Sistema</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Acesso</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Status</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground text-right">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y">
@@ -278,32 +278,34 @@ export function Clients() {
 
                                             return (
                                                 <tr key={client.id} className={getClientRowClass(client)}>
-                                                    <td className="px-6 py-4">
-                                                        <div className="font-medium text-foreground text-base">{client.name}</div>
-                                                        <div className="flex items-center gap-2 mt-1">
-                                                            <span className={`text-xs px-2 py-0.5 rounded border ${badgeClass} uppercase font-bold tracking-wide`}>
+                                                    <td className="px-6 py-2.5 align-middle">
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-medium text-foreground text-sm">{client.name}</span>
+                                                            <span className={`text-[10px] px-1.5 py-0.5 rounded border ${badgeClass} uppercase font-bold tracking-wide`}>
                                                                 {client.system}
                                                             </span>
-                                                            {client.cnpj && <span className="text-xs text-muted-foreground font-mono">{client.cnpj}</span>}
+                                                            {client.cnpj && <span className="text-xs text-muted-foreground font-mono ml-1">{client.cnpj}</span>}
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <div className="space-y-1">
+                                                    <td className="px-6 py-2.5 align-middle">
+                                                        <div className="flex items-center gap-3 flex-wrap text-sm">
                                                             {isWinfood ? (
-                                                                <div className="text-sm">
+                                                                <div className="flex items-center gap-1">
                                                                     <span className="text-muted-foreground">Operador:</span> <span className="font-medium text-foreground">{client.system_login || '-'}</span>
                                                                 </div>
                                                             ) : (
                                                                 <>
-                                                                    <div className="text-sm">
+                                                                    <div className="flex items-center gap-1">
                                                                         <span className="text-muted-foreground">Cód:</span> <span className="font-mono font-medium text-foreground">{client.login_code || '-'}</span>
                                                                     </div>
-                                                                    <div className="text-sm">
+                                                                    <span className="text-muted-foreground">•</span>
+                                                                    <div className="flex items-center gap-1">
                                                                         <span className="text-muted-foreground">Usuário:</span> <span className="font-medium text-foreground">{client.system_login || '-'}</span>
                                                                     </div>
                                                                 </>
                                                             )}
-                                                            <div className="text-sm flex items-center gap-1 group cursor-pointer" title="Clique para copiar (futuro)">
+                                                            <span className="text-muted-foreground">•</span>
+                                                            <div className="flex items-center gap-1 group cursor-pointer" title="Clique para copiar (futuro)">
                                                                 <span className="text-muted-foreground">Senha:</span>
                                                                 <span className="font-mono bg-background px-1 rounded border border-border text-foreground text-xs">
                                                                     {pass}
@@ -311,8 +313,8 @@ export function Clients() {
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${client.status === 'active' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' :
+                                                    <td className="px-6 py-2.5 align-middle">
+                                                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${client.status === 'active' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' :
                                                             client.status === 'inactive' ? 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700' :
                                                                 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800'
                                                             }`}>
@@ -320,7 +322,7 @@ export function Clients() {
                                                                 client.status === 'active' ? 'Ativo' : 'Inativo'}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4 text-right">
+                                                    <td className="px-6 py-2.5 text-right align-middle">
                                                         <div className="flex justify-end gap-2">
                                                             <Button
                                                                 size="sm"
