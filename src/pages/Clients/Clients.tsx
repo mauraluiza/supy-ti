@@ -112,7 +112,7 @@ export function Clients() {
     };
 
     return (
-        <PageContainer>
+        <PageContainer className="bg-gray-50 min-h-screen">
             <PageHeader
                 title="Gerenciamento de Clientes"
                 description="Gerencie os acessos e dados dos clientes"
@@ -133,7 +133,7 @@ export function Clients() {
                             value={filters.search}
                             onChange={(val) => setFilters(prev => ({ ...prev, search: val }))}
                             placeholder="Buscar cliente..."
-                            className="flex-1 max-w-lg min-w-0"
+                            className="flex-1 max-w-lg min-w-0 [&_input]:bg-white [&_input]:border-gray-200 shadow-sm"
                         />
 
                         <div className="relative">
@@ -251,10 +251,10 @@ export function Clients() {
                         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto"></div>
                     </div>
                 ) : (
-                    <div className="rounded-md border border-border bg-background overflow-hidden shadow-sm">
+                    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                         <div className="overflow-x-auto">
                             <table className="w-full text-left text-sm">
-                                <thead className="bg-muted/50 border-b border-border">
+                                <thead className="bg-white border-b border-gray-200">
                                     <tr>
                                         <th className="px-6 py-2.5 font-medium text-muted-foreground">Cliente / Sistema</th>
                                         <th className="px-6 py-2.5 font-medium text-muted-foreground">Acesso</th>
@@ -262,7 +262,7 @@ export function Clients() {
                                         <th className="px-6 py-2.5 font-medium text-muted-foreground text-right">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y">
+                                <tbody>
                                     {filteredClients.length === 0 ? (
                                         <tr>
                                             <td colSpan={4} className="p-4">
@@ -278,14 +278,19 @@ export function Clients() {
                                         paginatedClients.map(client => {
                                             // Badge Logic
                                             const isWinfood = client.system === 'winfood';
-                                            const badgeClass = isWinfood
-                                                ? "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800"
-                                                : "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800";
+                                            const isInactive = client.status === 'inactive';
+
+                                            let badgeClass = "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800"; // default CPlug
+                                            if (isInactive) {
+                                                badgeClass = "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700";
+                                            } else if (isWinfood) {
+                                                badgeClass = "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800";
+                                            }
 
                                             const pass = client.encrypted_password ? decryptData(client.encrypted_password) : '---';
 
                                             return (
-                                                <tr key={client.id} className={getClientRowClass(client)}>
+                                                <tr key={client.id} className={`border-b border-b-gray-100 last:border-b-0 ${getClientRowClass(client)}`}>
                                                     <td className="px-6 py-2.5 align-middle">
                                                         <div className="flex items-center gap-2">
                                                             <span className={`text-[10px] px-1.5 py-0.5 rounded border ${badgeClass} uppercase font-bold tracking-wide`}>
