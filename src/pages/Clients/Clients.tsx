@@ -29,6 +29,8 @@ export function Clients() {
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingClient, setEditingClient] = useState<Client | undefined>(undefined);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const fetchClients = async () => {
         setLoading(true);
@@ -89,6 +91,17 @@ export function Clients() {
     }, [clients, filters]);
 
     const activeFiltersCount = filters.systems.length + filters.status.length;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filters]);
+
+    const paginatedClients = useMemo(() => {
+        const start = (currentPage - 1) * itemsPerPage;
+        return filteredClients.slice(start, start + itemsPerPage);
+    }, [filteredClients, currentPage]);
+
+    const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
 
     return (
         <PageContainer>
@@ -254,7 +267,7 @@ export function Clients() {
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredClients.map(client => {
+                                        paginatedClients.map(client => {
                                             // Badge Logic
                                             const isWinfood = client.system === 'winfood';
                                             const badgeClass = isWinfood
@@ -336,6 +349,36 @@ export function Clients() {
                                 </tbody>
                             </table>
                         </div>
+
+                        {/* Paginação */}
+                        {filteredClients.length > 0 && (
+                            <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-4 border-t border-border bg-muted/10 gap-4">
+                                <div className="text-sm text-muted-foreground">
+                                    Mostrando {(currentPage - 1) * itemsPerPage + 1}–{Math.min(currentPage * itemsPerPage, filteredClients.length)} de {filteredClients.length} clientes
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPage === 1}
+                                    >
+                                        Anterior
+                                    </Button>
+                                    <span className="text-sm font-medium px-4">
+                                        {currentPage} de {totalPages}
+                                    </span>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                        disabled={currentPage === totalPages || totalPages === 0}
+                                    >
+                                        Próximo
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
