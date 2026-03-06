@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { clientService } from '../../services/supabase';
 import type { Client } from '../../types';
-import { Plus, Edit, Trash2, Users } from 'lucide-react';
+import { Plus, Edit, Trash2, Users, Filter, ChevronDown, X } from 'lucide-react';
 import { ClientModal } from '../../modals/ClientModal';
 import { useEncryption } from '../../hooks/useEncryption';
 import { PageContainer } from '../../components/layout/page/PageContainer';
@@ -9,15 +9,25 @@ import { PageHeader } from '../../components/layout/page/PageHeader';
 import { PageSearch } from '../../components/layout/page/PageSearch';
 import { Button } from '../../components/ui/button';
 import { EmptyState } from '../../components/ui/empty-state';
-import { getClientRowClass, getActiveClients, getInactiveClients } from '../../lib/utils';
+import { getClientRowClass } from '../../lib/utils';
+
+type ClientFilters = {
+    search: string;
+    systems: string[];
+    status: string[];
+};
 
 export function Clients() {
     const { decryptData } = useEncryption();
     const [clients, setClients] = useState<Client[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState<ClientFilters>({
+        search: "",
+        systems: [],
+        status: []
+    });
+    const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [showInactive, setShowInactive] = useState(false);
     const [editingClient, setEditingClient] = useState<Client | undefined>(undefined);
 
     const fetchClients = async () => {
@@ -58,15 +68,31 @@ export function Clients() {
         setIsModalOpen(true);
     }
 
-    const activeClients = getActiveClients(clients);
-    const inactiveClients = getInactiveClients(clients);
+    const filteredClients = useMemo(() => {
+        return clients.filter(client => {
+            // Text search
+            const searchLower = filters.search.toLowerCase();
+            const matchesSearch = filters.search === "" || (
+                client.name.toLowerCase().includes(searchLower) ||
+                (client.system_login && client.system_login.toLowerCase().includes(searchLower)) ||
+                (client.system && client.system.toLowerCase().includes(searchLower))
+            );
 
-    const displayedClients = showInactive ? inactiveClients : activeClients;
+            // System filter
+            const matchesSystem = filters.systems.length === 0 || (client.system && filters.systems.includes(client.system));
 
-    const filteredClients = displayedClients.filter(client =>
-        client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        client.system_login?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+            // Status filter
+            const matchesStatus = filters.status.length === 0 || (client.status && filters.status.includes(client.status));
+
+            return matchesSearch && matchesSystem && matchesStatus;
+        });
+    }, [clients, filters]);
+
+    const hasActiveFilters = filters.search !== "" || filters.systems.length > 0 || filters.status.length > 0;
+
+    const clearFilters = () => {
+        setFilters({ search: "", systems: [], status: [] });
+    };
 
     return (
         <PageContainer>
@@ -83,28 +109,123 @@ export function Clients() {
             />
 
             <div className="flex flex-col space-y-4">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3 relative">
                     <PageSearch
-                        value={searchTerm}
-                        onChange={setSearchTerm}
+                        value={filters.search}
+                        onChange={(val) => setFilters(prev => ({ ...prev, search: val }))}
                         placeholder="Buscar por nome, usuário ou sistema..."
-                        totalResultCount={displayedClients.length}
-                        filteredResultCount={filteredClients.length}
+                        className="flex-1 max-w-lg min-w-0"
                     />
-                    {inactiveClients.length > 0 && (
+
+                    <div className="relative">
                         <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => setShowInactive(!showInactive)}
-                            className={
-                                showInactive
-                                    ? "bg-gray-600 hover:bg-gray-700 text-white dark:bg-gray-600 dark:hover:bg-gray-500"
-                                    : "bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-300"
-                            }
+                            variant="outline"
+                            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                            className="flex items-center gap-2"
                         >
-                            Inativos ({inactiveClients.length})
+                            <Filter size={16} />
+                            Filtros
+                            <ChevronDown size={14} className="text-muted-foreground" />
                         </Button>
+
+                        {isFiltersOpen && (
+                            <div className="absolute right-0 top-full mt-2 w-56 rounded-md border border-border bg-background p-4 shadow-lg z-10">
+                                <div className="space-y-4">
+                                    <div>
+                                        <h4 className="font-medium text-sm mb-2 text-foreground">Sistema</h4>
+                                        <div className="space-y-2">
+                                            {['Winfood', 'CPlug'].map(sys => {
+                                                const sysLower = sys.toLowerCase();
+                                                return (
+                                                    <label key={sys} className="flex items-center space-x-2 cursor-pointer text-sm">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="rounded border-gray-300 text-primary focus:ring-primary w-4 h-4 cursor-pointer align-middle"
+                                                            checked={filters.systems.includes(sysLower)}
+                                                            onChange={(e) => {
+                                                                if (e.target.checked) {
+                                                                    setFilters(prev => ({ ...prev, systems: [...prev.systems, sysLower] }));
+                                                                } else {
+                                                                    setFilters(prev => ({ ...prev, systems: prev.systems.filter(s => s !== sysLower) }));
+                                                                }
+                                                            }}
+                                                        />
+                                                        <span className="text-muted-foreground">{sys}</span>
+                                                    </label>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="font-medium text-sm mb-2 text-foreground">Status</h4>
+                                        <div className="space-y-2">
+                                            {[
+                                                { label: 'Ativo', value: 'active' },
+                                                { label: 'Implantação', value: 'implantation' },
+                                                { label: 'Inativo', value: 'inactive' }
+                                            ].map(statusObj => (
+                                                <label key={statusObj.value} className="flex items-center space-x-2 cursor-pointer text-sm">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="rounded border-gray-300 text-primary focus:ring-primary w-4 h-4 cursor-pointer align-middle"
+                                                        checked={filters.status.includes(statusObj.value)}
+                                                        onChange={(e) => {
+                                                            if (e.target.checked) {
+                                                                setFilters(prev => ({ ...prev, status: [...prev.status, statusObj.value] }));
+                                                            } else {
+                                                                setFilters(prev => ({ ...prev, status: prev.status.filter(s => s !== statusObj.value) }));
+                                                            }
+                                                        }}
+                                                    />
+                                                    <span className="text-muted-foreground">{statusObj.label}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex flex-col space-y-2">
+                    {(filters.systems.length > 0 || filters.status.length > 0) && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-sm text-muted-foreground mr-1">Filtros ativos:</span>
+                            {filters.systems.map(sys => {
+                                const label = sys === 'winfood' ? 'Winfood' : sys === 'cplug' ? 'CPlug' : sys;
+                                return (
+                                    <span key={sys} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-secondary text-secondary-foreground text-xs font-medium border border-border">
+                                        Sistema: {label}
+                                        <button
+                                            onClick={() => setFilters(prev => ({ ...prev, systems: prev.systems.filter(s => s !== sys) }))}
+                                            className="hover:text-destructive flex items-center justify-center ml-1"
+                                        >
+                                            <X size={12} />
+                                        </button>
+                                    </span>
+                                );
+                            })}
+                            {filters.status.map(st => {
+                                const label = st === 'active' ? 'Ativo' : st === 'implantation' ? 'Implantação' : st === 'inactive' ? 'Inativo' : st;
+                                return (
+                                    <span key={st} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-secondary text-secondary-foreground text-xs font-medium border border-border">
+                                        Status: {label}
+                                        <button
+                                            onClick={() => setFilters(prev => ({ ...prev, status: prev.status.filter(s => s !== st) }))}
+                                            className="hover:text-destructive flex items-center justify-center ml-1"
+                                        >
+                                            <X size={12} />
+                                        </button>
+                                    </span>
+                                );
+                            })}
+                        </div>
                     )}
+                    <div className="text-sm text-muted-foreground">
+                        {filteredClients.length} {filteredClients.length === 1 ? 'cliente' : 'clientes'}
+                    </div>
                 </div>
 
                 {/* Table */}
@@ -130,7 +251,7 @@ export function Clients() {
                                             <td colSpan={4} className="p-4">
                                                 <EmptyState
                                                     title="Nenhum cliente encontrado"
-                                                    description={searchTerm ? "Verifique a ortografia ou tente outro termo." : "Comece cadastrando seu primeiro cliente."}
+                                                    description={hasActiveFilters ? "Tente ajustar os filtros para encontrar o que procura." : "Comece cadastrando seu primeiro cliente."}
                                                     icon={Users}
                                                     className="border-none bg-transparent" // Remove border since table already has it
                                                 />
