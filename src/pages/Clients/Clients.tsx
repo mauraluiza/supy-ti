@@ -88,11 +88,7 @@ export function Clients() {
         });
     }, [clients, filters]);
 
-    const hasActiveFilters = filters.search !== "" || filters.systems.length > 0 || filters.status.length > 0;
-
-    const clearFilters = () => {
-        setFilters({ search: "", systems: [], status: [] });
-    };
+    const activeFiltersCount = filters.systems.length + filters.status.length;
 
     return (
         <PageContainer>
@@ -109,98 +105,98 @@ export function Clients() {
             />
 
             <div className="flex flex-col space-y-4">
-                <div className="flex flex-wrap items-center gap-3 relative">
-                    <PageSearch
-                        value={filters.search}
-                        onChange={(val) => setFilters(prev => ({ ...prev, search: val }))}
-                        placeholder="Buscar por nome, usuário ou sistema..."
-                        className="flex-1 max-w-lg min-w-0"
-                    />
+                {/* Cabeçalho de Busca e Filtros */}
+                <div className="flex flex-col space-y-2 pb-1">
+                    <div className="flex items-center gap-2 relative">
+                        <PageSearch
+                            value={filters.search}
+                            onChange={(val) => setFilters(prev => ({ ...prev, search: val }))}
+                            placeholder="Buscar cliente..."
+                            className="flex-1 max-w-lg min-w-0"
+                        />
 
-                    <div className="relative">
-                        <Button
-                            variant="outline"
-                            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                            className="flex items-center gap-2"
-                        >
-                            <Filter size={16} />
-                            Filtros
-                            <ChevronDown size={14} className="text-muted-foreground" />
-                        </Button>
+                        <div className="relative">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                className="flex items-center gap-2"
+                            >
+                                <Filter size={16} />
+                                {activeFiltersCount > 0 ? `Filtros (${activeFiltersCount})` : 'Filtros'}
+                                <ChevronDown size={14} className={`text-muted-foreground transition-transform ${isFiltersOpen ? 'rotate-180' : ''}`} />
+                            </Button>
 
-                        {isFiltersOpen && (
-                            <div className="absolute right-0 top-full mt-2 w-56 rounded-md border border-border bg-background p-4 shadow-lg z-10">
-                                <div className="space-y-4">
-                                    <div>
-                                        <h4 className="font-medium text-sm mb-2 text-foreground">Sistema</h4>
-                                        <div className="space-y-2">
-                                            {['Winfood', 'CPlug'].map(sys => {
-                                                const sysLower = sys.toLowerCase();
-                                                return (
-                                                    <label key={sys} className="flex items-center space-x-2 cursor-pointer text-sm">
+                            {isFiltersOpen && (
+                                <div className="absolute right-0 top-full mt-2 w-56 rounded-md border border-border bg-background p-4 shadow-lg z-10">
+                                    <div className="space-y-4">
+                                        <div>
+                                            <h4 className="font-medium text-sm mb-2 text-foreground">Sistema</h4>
+                                            <div className="space-y-2">
+                                                {['Winfood', 'CPlug'].map(sys => {
+                                                    const sysLower = sys.toLowerCase();
+                                                    return (
+                                                        <label key={sys} className="flex items-center space-x-2 cursor-pointer text-sm">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="rounded border-gray-300 text-primary focus:ring-primary w-4 h-4 cursor-pointer align-middle"
+                                                                checked={filters.systems.includes(sysLower)}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setFilters(prev => ({ ...prev, systems: [...prev.systems, sysLower] }));
+                                                                    } else {
+                                                                        setFilters(prev => ({ ...prev, systems: prev.systems.filter(s => s !== sysLower) }));
+                                                                    }
+                                                                }}
+                                                            />
+                                                            <span className="text-muted-foreground">{sys}</span>
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h4 className="font-medium text-sm mb-2 text-foreground">Status</h4>
+                                            <div className="space-y-2">
+                                                {[
+                                                    { label: 'Ativo', value: 'active' },
+                                                    { label: 'Implantação', value: 'implantation' },
+                                                    { label: 'Inativo', value: 'inactive' }
+                                                ].map(statusObj => (
+                                                    <label key={statusObj.value} className="flex items-center space-x-2 cursor-pointer text-sm">
                                                         <input
                                                             type="checkbox"
                                                             className="rounded border-gray-300 text-primary focus:ring-primary w-4 h-4 cursor-pointer align-middle"
-                                                            checked={filters.systems.includes(sysLower)}
+                                                            checked={filters.status.includes(statusObj.value)}
                                                             onChange={(e) => {
                                                                 if (e.target.checked) {
-                                                                    setFilters(prev => ({ ...prev, systems: [...prev.systems, sysLower] }));
+                                                                    setFilters(prev => ({ ...prev, status: [...prev.status, statusObj.value] }));
                                                                 } else {
-                                                                    setFilters(prev => ({ ...prev, systems: prev.systems.filter(s => s !== sysLower) }));
+                                                                    setFilters(prev => ({ ...prev, status: prev.status.filter(s => s !== statusObj.value) }));
                                                                 }
                                                             }}
                                                         />
-                                                        <span className="text-muted-foreground">{sys}</span>
+                                                        <span className="text-muted-foreground">{statusObj.label}</span>
                                                     </label>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h4 className="font-medium text-sm mb-2 text-foreground">Status</h4>
-                                        <div className="space-y-2">
-                                            {[
-                                                { label: 'Ativo', value: 'active' },
-                                                { label: 'Implantação', value: 'implantation' },
-                                                { label: 'Inativo', value: 'inactive' }
-                                            ].map(statusObj => (
-                                                <label key={statusObj.value} className="flex items-center space-x-2 cursor-pointer text-sm">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="rounded border-gray-300 text-primary focus:ring-primary w-4 h-4 cursor-pointer align-middle"
-                                                        checked={filters.status.includes(statusObj.value)}
-                                                        onChange={(e) => {
-                                                            if (e.target.checked) {
-                                                                setFilters(prev => ({ ...prev, status: [...prev.status, statusObj.value] }));
-                                                            } else {
-                                                                setFilters(prev => ({ ...prev, status: prev.status.filter(s => s !== statusObj.value) }));
-                                                            }
-                                                        }}
-                                                    />
-                                                    <span className="text-muted-foreground">{statusObj.label}</span>
-                                                </label>
-                                            ))}
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
-                </div>
 
-                <div className="flex flex-col space-y-2">
-                    {(filters.systems.length > 0 || filters.status.length > 0) && (
+                    {activeFiltersCount > 0 && (
                         <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm text-muted-foreground mr-1">Filtros ativos:</span>
                             {filters.systems.map(sys => {
                                 const label = sys === 'winfood' ? 'Winfood' : sys === 'cplug' ? 'CPlug' : sys;
                                 return (
-                                    <span key={sys} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-secondary text-secondary-foreground text-xs font-medium border border-border">
+                                    <span key={sys} className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground rounded-full px-3 py-1 text-xs font-medium flex items-center gap-1 transition-colors">
                                         Sistema: {label}
                                         <button
                                             onClick={() => setFilters(prev => ({ ...prev, systems: prev.systems.filter(s => s !== sys) }))}
-                                            className="hover:text-destructive flex items-center justify-center ml-1"
+                                            className="text-muted-foreground hover:text-destructive flex items-center justify-center transition-colors focus:outline-none ml-0.5"
                                         >
                                             <X size={12} />
                                         </button>
@@ -210,11 +206,11 @@ export function Clients() {
                             {filters.status.map(st => {
                                 const label = st === 'active' ? 'Ativo' : st === 'implantation' ? 'Implantação' : st === 'inactive' ? 'Inativo' : st;
                                 return (
-                                    <span key={st} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-secondary text-secondary-foreground text-xs font-medium border border-border">
+                                    <span key={st} className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground rounded-full px-3 py-1 text-xs font-medium flex items-center gap-1 transition-colors">
                                         Status: {label}
                                         <button
                                             onClick={() => setFilters(prev => ({ ...prev, status: prev.status.filter(s => s !== st) }))}
-                                            className="hover:text-destructive flex items-center justify-center ml-1"
+                                            className="text-muted-foreground hover:text-destructive flex items-center justify-center transition-colors focus:outline-none ml-0.5"
                                         >
                                             <X size={12} />
                                         </button>
@@ -223,7 +219,7 @@ export function Clients() {
                             })}
                         </div>
                     )}
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-gray-500">
                         {filteredClients.length} {filteredClients.length === 1 ? 'cliente' : 'clientes'}
                     </div>
                 </div>
@@ -251,7 +247,7 @@ export function Clients() {
                                             <td colSpan={4} className="p-4">
                                                 <EmptyState
                                                     title="Nenhum cliente encontrado"
-                                                    description={hasActiveFilters ? "Tente ajustar os filtros para encontrar o que procura." : "Comece cadastrando seu primeiro cliente."}
+                                                    description={(activeFiltersCount > 0 || filters.search !== "") ? "Tente ajustar os filtros para encontrar o que procura." : "Comece cadastrando seu primeiro cliente."}
                                                     icon={Users}
                                                     className="border-none bg-transparent" // Remove border since table already has it
                                                 />
