@@ -256,8 +256,11 @@ export function Clients() {
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-white border-b border-gray-200">
                                     <tr>
-                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Cliente / Sistema</th>
-                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Acesso</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Sistema</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Nome</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Login Code</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Usuário</th>
+                                        <th className="px-6 py-2.5 font-medium text-muted-foreground">Senha</th>
                                         <th className="px-6 py-2.5 font-medium text-muted-foreground">Status</th>
                                         <th className="px-6 py-2.5 font-medium text-muted-foreground text-right">Ações</th>
                                     </tr>
@@ -265,7 +268,7 @@ export function Clients() {
                                 <tbody>
                                     {filteredClients.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="p-4">
+                                            <td colSpan={7} className="p-4">
                                                 <EmptyState
                                                     title="Nenhum cliente encontrado"
                                                     description={(activeFiltersCount > 0 || filters.search !== "") ? "Tente ajustar os filtros para encontrar o que procura." : "Comece cadastrando seu primeiro cliente."}
@@ -292,41 +295,46 @@ export function Clients() {
                                             return (
                                                 <tr key={client.id} className={`border-b border-b-gray-100 last:border-b-0 ${getClientRowClass(client)}`}>
                                                     <td className="px-6 py-2.5 align-middle">
+                                                        <span className={`text-[10px] px-1.5 py-0.5 rounded border ${badgeClass} uppercase font-bold tracking-wide`}>
+                                                            {client.system}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-2.5 align-middle">
                                                         <div className="flex items-center gap-2">
-                                                            <span className={`text-[10px] px-1.5 py-0.5 rounded border ${badgeClass} uppercase font-bold tracking-wide`}>
-                                                                {client.system}
-                                                            </span>
                                                             <span className="font-medium text-foreground text-sm">{client.name}</span>
-                                                            {client.cnpj && <span className="text-xs text-muted-foreground font-mono ml-1">{client.cnpj}</span>}
+                                                            {client.cnpj && <span className="text-xs text-muted-foreground font-mono">{client.cnpj}</span>}
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-2.5 align-middle">
-                                                        <div className="grid grid-cols-3 gap-4 items-center">
-                                                            {!isWinfood && client.login_code ? (
-                                                                <div className="flex items-center gap-1 group cursor-pointer" onClick={() => copyToClipboard(client.login_code as string)} title="Copiar código">
-                                                                    <span className="font-medium text-sm text-foreground">{client.login_code}</span>
-                                                                    <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
-                                                                </div>
-                                                            ) : (
-                                                                <span className="text-gray-300">—</span>
-                                                            )}
-                                                            {client.system_login ? (
-                                                                <div className="flex items-center gap-1 group cursor-pointer" onClick={() => copyToClipboard(client.system_login as string)} title={isWinfood ? "Copiar operador" : "Copiar usuário"}>
-                                                                    <span className="font-medium text-sm text-foreground">{client.system_login}</span>
-                                                                    <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
-                                                                </div>
-                                                            ) : (
-                                                                <span className="text-gray-300">—</span>
-                                                            )}
-                                                            {pass !== '---' ? (
-                                                                <div className="flex items-center gap-1 group cursor-pointer" onClick={() => copyToClipboard(pass)} title="Copiar senha">
-                                                                    <span className="font-medium text-sm text-foreground">{pass}</span>
-                                                                    <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
-                                                                </div>
-                                                            ) : (
-                                                                <span className="text-gray-300">—</span>
-                                                            )}
-                                                        </div>
+                                                        {!isWinfood && client.login_code ? (
+                                                            <div className="flex items-center gap-1 group cursor-pointer w-fit" onClick={() => copyToClipboard(client.login_code as string)} title="Copiar código">
+                                                                <span className="font-medium text-sm text-foreground">{client.login_code}</span>
+                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-gray-300">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-2.5 align-middle">
+                                                        {client.system_login ? (
+                                                            <div className="flex items-center gap-1 group cursor-pointer w-fit" onClick={() => copyToClipboard(client.system_login as string)} title={isWinfood ? "Copiar operador" : "Copiar usuário"}>
+                                                                <span className="font-medium text-sm text-foreground">{client.system_login}</span>
+                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-gray-300">—</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-2.5 align-middle">
+                                                        {pass !== '---' ? (
+                                                            <div className="flex items-center gap-1 group cursor-pointer w-fit" onClick={() => copyToClipboard(pass)} title="Copiar senha">
+                                                                <span className="font-medium text-sm text-muted-foreground group-hover:hidden mt-0.5 tracking-widest">••••••</span>
+                                                                <span className="font-medium text-sm text-foreground hidden group-hover:inline-flex">{pass}</span>
+                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-gray-300">—</span>
+                                                        )}
                                                     </td>
                                                     <td className="px-6 py-2.5 align-middle">
                                                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${client.status === 'active' ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' :
