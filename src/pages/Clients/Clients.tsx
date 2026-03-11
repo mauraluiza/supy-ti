@@ -305,18 +305,18 @@ export function Clients() {
                                                             {isWinfood ? (
                                                                 <div className="flex items-center gap-1 group cursor-pointer" onClick={() => client.system_login && copyToClipboard(client.system_login)} title="Copiar operador">
                                                                     <span className="font-medium text-foreground">{client.system_login || '-'}</span>
-                                                                    {client.system_login && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
+                                                                    {client.system_login && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 opacity-0 group-hover:opacity-100 transition-all" />}
                                                                 </div>
                                                             ) : (
                                                                 <>
                                                                     <div className="flex items-center gap-1 group cursor-pointer" onClick={() => client.login_code && copyToClipboard(client.login_code)} title="Copiar código">
                                                                         <span className="font-mono text-xs font-medium text-foreground">{client.login_code || '-'}</span>
-                                                                        {client.login_code && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
+                                                                        {client.login_code && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 opacity-0 group-hover:opacity-100 transition-all" />}
                                                                     </div>
                                                                     <span className="text-muted-foreground">•</span>
                                                                     <div className="flex items-center gap-1 group cursor-pointer" onClick={() => client.system_login && copyToClipboard(client.system_login)} title="Copiar usuário">
                                                                         <span className="font-medium text-foreground">{client.system_login || '-'}</span>
-                                                                        {client.system_login && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
+                                                                        {client.system_login && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 opacity-0 group-hover:opacity-100 transition-all" />}
                                                                     </div>
                                                                 </>
                                                             )}
@@ -325,7 +325,7 @@ export function Clients() {
                                                                 <span className="font-mono bg-gray-100 dark:bg-gray-800 px-1 rounded border border-border text-foreground text-xs">
                                                                     {pass}
                                                                 </span>
-                                                                {pass !== '---' && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 transition-colors" />}
+                                                                {pass !== '---' && <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 ml-1 opacity-0 group-hover:opacity-100 transition-all" />}
                                                             </div>
                                                         </div>
                                                     </td>
