@@ -64,18 +64,14 @@ export function TaskCard({ task, onEdit, interactive = true }: TaskCardProps) {
                 <CardTitle className="text-base font-semibold leading-tight mt-2 text-foreground break-words line-clamp-1" title={task.title}>
                     {task.title}
                 </CardTitle>
-                <div className="flex items-center gap-2 mt-1 min-h-[16px]">
-                    {task.ticket && (
-                        <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded border bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:border-blue-800 shrink-0">
-                            {task.ticket}
-                        </span>
-                    )}
-                    {clientName && (
+                {clientName && (
+                    <div className="mt-1 flex items-center">
                         <span className="text-xs text-muted-foreground font-medium truncate">
                             {clientName}
+                            {task.ticket ? ` • ${task.ticket}` : ''}
                         </span>
-                    )}
-                </div>
+                    </div>
+                )}
             </CardHeader>
             <CardContent className="flex-grow">
                 <p className="text-sm text-muted-foreground line-clamp-2 min-h-[40px]">
