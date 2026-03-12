@@ -21,6 +21,8 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
     const [clientsLoading, setClientsLoading] = useState(false);
 
     // Form States
+    const [title, setTitle] = useState('');
+    const [ticket, setTicket] = useState('');
     const [clientId, setClientId] = useState('');
     const [status, setStatus] = useState<'urgent' | 'in_progress' | 'pending' | 'done'>('pending');
     const [description, setDescription] = useState('');
@@ -50,11 +52,15 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
     useEffect(() => {
         if (isOpen) {
             if (taskToEdit) {
+                setTitle(taskToEdit.title || '');
+                setTicket(taskToEdit.ticket || '');
                 setClientId(taskToEdit.client_id || '');
                 setStatus(taskToEdit.status);
                 setDescription(taskToEdit.description || '');
             } else {
                 // Reset
+                setTitle('');
+                setTicket('');
                 setClientId('');
                 setStatus('pending');
                 setDescription('');
@@ -69,12 +75,14 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
 
         try {
             if (!user) throw new Error("Usuário não autenticado");
-            if (!clientId) throw new Error("Cliente é obrigatório");
-            if (!description) throw new Error("Descrição é obrigatória");
+            if (!title.trim()) throw new Error("Título é obrigatório");
+            if (!description.trim()) throw new Error("Descrição é obrigatória");
 
             const payload = {
                 user_id: user.id,
-                client_id: clientId,
+                title: title.trim(),
+                ticket: ticket.trim() || null,
+                client_id: clientId || null,
                 status,
                 description,
             };
@@ -121,20 +129,49 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
             <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
                 <ModalBody className="space-y-4">
 
-                    {/* Linha 1: Cliente e Status */}
+                    {/* Linha 1: Título e Ticket */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-foreground mb-1">
-                                Cliente <span className="text-red-500">*</span>
+                                Título <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                required
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Resumo da tarefa..."
+                                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary sm:text-sm placeholder:text-muted-foreground"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-1">
+                                Ticket <span className="text-muted-foreground font-normal">(opcional)</span>
+                            </label>
+                            <input
+                                type="text"
+                                value={ticket}
+                                onChange={(e) => setTicket(e.target.value)}
+                                placeholder="Ex: #12345"
+                                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary sm:text-sm placeholder:text-muted-foreground"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Linha 2: Cliente e Status */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-1">
+                                Cliente <span className="text-muted-foreground font-normal">(opcional)</span>
                             </label>
                             <select
-                                required
                                 value={clientId}
                                 onChange={(e) => setClientId(e.target.value)}
                                 disabled={clientsLoading}
                                 className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary sm:text-sm"
                             >
-                                <option value="">Selecione um cliente...</option>
+                                <option value="">Nenhum cliente específico</option>
                                 {clients.map(client => (
                                     <option key={client.id} value={client.id}>
                                         {client.name}

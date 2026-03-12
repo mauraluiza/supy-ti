@@ -49,8 +49,10 @@ export type Integration = AnydeskIntegration | IfoodIntegration | AnotaAiIntegra
 
 export interface Task {
     id: string;
-    client_id: string;
+    client_id?: string;
     user_id: string;
+    title: string;
+    ticket?: string;
     description: string;
     status: 'urgent' | 'in_progress' | 'pending' | 'done';
     created_at: string;
