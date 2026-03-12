@@ -9,7 +9,6 @@ import { PageHeader } from '../../components/layout/page/PageHeader';
 import { PageSearch } from '../../components/layout/page/PageSearch';
 import { Button } from '../../components/ui/button';
 import { EmptyState } from '../../components/ui/empty-state';
-import { getClientRowClass } from '../../lib/utils';
 
 type ClientFilters = {
     search: string;
@@ -283,17 +282,18 @@ export function Clients() {
                                             const isWinfood = client.system === 'winfood';
                                             const isInactive = client.status === 'inactive';
 
-                                            let badgeClass = "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800"; // default CPlug
+                                            let badgeClass = "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/40 dark:text-blue-400 dark:border-blue-800"; // default CPlug
                                             if (isInactive) {
-                                                badgeClass = "bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700";
+                                                badgeClass = "bg-gray-100 text-gray-400 border-gray-200 dark:bg-gray-800 dark:text-gray-500 dark:border-gray-700";
                                             } else if (isWinfood) {
-                                                badgeClass = "bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800";
+                                                badgeClass = "bg-[#eef5ff] text-[#1c0a8c] border-[#1c0a8c]/20 dark:bg-blue-900/60 dark:text-blue-300 dark:border-blue-800";
                                             }
 
                                             const pass = client.encrypted_password ? decryptData(client.encrypted_password) : '---';
+                                            const textColor = isInactive ? "text-gray-400 dark:text-gray-500" : "text-foreground";
 
                                             return (
-                                                <tr key={client.id} className={`border-b border-b-gray-100 last:border-b-0 ${getClientRowClass(client)}`}>
+                                                <tr key={client.id} className="border-b border-gray-100 last:border-0 bg-white even:bg-gray-50 hover:bg-gray-50 transition-colors group cursor-pointer" onClick={() => handleEdit(client)}>
                                                     <td className="px-6 py-2.5 align-middle">
                                                         <span className={`text-[10px] px-1.5 py-0.5 rounded border ${badgeClass} uppercase font-bold tracking-wide`}>
                                                             {client.system}
@@ -301,15 +301,15 @@ export function Clients() {
                                                     </td>
                                                     <td className="px-6 py-2.5 align-middle">
                                                         <div className="flex items-center gap-2">
-                                                            <span className="font-medium text-foreground text-sm">{client.name}</span>
-                                                            {client.cnpj && <span className="text-xs text-muted-foreground font-mono">{client.cnpj}</span>}
+                                                            <span className={`font-semibold text-sm ${isInactive ? textColor : 'text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors'}`}>{client.name}</span>
+                                                            {client.cnpj && <span className={`text-xs font-mono empty:hidden ${isInactive ? 'text-gray-300' : 'text-muted-foreground'}`}>{client.cnpj}</span>}
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-2.5 align-middle">
                                                         {!isWinfood && client.login_code ? (
-                                                            <div className="flex items-center gap-1 group cursor-pointer w-fit" onClick={() => copyToClipboard(client.login_code as string)} title="Copiar código">
-                                                                <span className="font-medium text-sm text-foreground">{client.login_code}</span>
-                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
+                                                            <div className="flex items-center gap-1 group/item cursor-pointer w-fit" onClick={(e) => { e.stopPropagation(); copyToClipboard(client.login_code as string); }} title="Copiar código">
+                                                                <span className={`font-medium text-sm ${textColor}`}>{client.login_code}</span>
+                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover/item:opacity-100 transition-all" />
                                                             </div>
                                                         ) : (
                                                             <span className="text-gray-300">—</span>
@@ -317,9 +317,9 @@ export function Clients() {
                                                     </td>
                                                     <td className="px-6 py-2.5 align-middle">
                                                         {client.system_login ? (
-                                                            <div className="flex items-center gap-1 group cursor-pointer w-fit" onClick={() => copyToClipboard(client.system_login as string)} title={isWinfood ? "Copiar operador" : "Copiar usuário"}>
-                                                                <span className="font-medium text-sm text-foreground">{client.system_login}</span>
-                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
+                                                            <div className="flex items-center gap-1 group/item cursor-pointer w-fit" onClick={(e) => { e.stopPropagation(); copyToClipboard(client.system_login as string); }} title={isWinfood ? "Copiar operador" : "Copiar usuário"}>
+                                                                <span className={`font-medium text-sm ${textColor}`}>{client.system_login}</span>
+                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover/item:opacity-100 transition-all" />
                                                             </div>
                                                         ) : (
                                                             <span className="text-gray-300">—</span>
@@ -327,10 +327,10 @@ export function Clients() {
                                                     </td>
                                                     <td className="px-6 py-2.5 align-middle">
                                                         {pass !== '---' ? (
-                                                            <div className="flex items-center gap-1 group cursor-pointer w-fit" onClick={() => copyToClipboard(pass)} title="Copiar senha">
-                                                                <span className="font-medium text-sm text-muted-foreground group-hover:hidden mt-0.5 tracking-widest">••••••</span>
-                                                                <span className="font-medium text-sm text-foreground hidden group-hover:inline-flex">{pass}</span>
-                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover:opacity-100 transition-all" />
+                                                            <div className="flex items-center gap-1 group/item cursor-pointer w-fit" onClick={(e) => { e.stopPropagation(); copyToClipboard(pass); }} title="Copiar senha">
+                                                                <span className={`font-medium text-sm mt-0.5 tracking-widest group-hover/item:hidden ${isInactive ? 'text-gray-300' : 'text-muted-foreground'}`}>••••••</span>
+                                                                <span className={`font-medium text-sm hidden group-hover/item:inline-flex ${textColor}`}>{pass}</span>
+                                                                <Copy className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600 opacity-0 group-hover/item:opacity-100 transition-all" />
                                                             </div>
                                                         ) : (
                                                             <span className="text-gray-300">—</span>
@@ -350,7 +350,7 @@ export function Clients() {
                                                             <Button
                                                                 size="sm"
                                                                 variant="ghost"
-                                                                onClick={() => handleEdit(client)}
+                                                                onClick={(e) => { e.stopPropagation(); handleEdit(client); }}
                                                                 className="h-8 w-8 p-0"
                                                                 title="Editar"
                                                             >
@@ -359,7 +359,7 @@ export function Clients() {
                                                             <Button
                                                                 size="sm"
                                                                 variant="ghost"
-                                                                onClick={() => handleDelete(client.id)}
+                                                                onClick={(e) => { e.stopPropagation(); handleDelete(client.id); }}
                                                                 className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                                                                 title="Excluir"
                                                             >
