@@ -66,6 +66,17 @@ export function Tasks() {
         setIsModalOpen(true);
     };
 
+    const handleDeleteTask = async (taskId: string) => {
+        if (!window.confirm("Certeza que deseja excluir esta tarefa?")) return;
+        try {
+            await taskService.deleteTask(taskId);
+            fetchTasks();
+        } catch (error) {
+            console.error("Erro ao excluir tarefa:", error);
+            alert("Erro ao excluir tarefa.");
+        }
+    };
+
     const handleModalSuccess = () => {
         fetchTasks();
         setIsModalOpen(false); // TaskModal handles its own close, but we ensure state sync here or if onSuccess doesn't close it automatically (TaskModal does close itself, but we should update list).
@@ -257,6 +268,7 @@ export function Tasks() {
                                     key={task.id}
                                     task={task}
                                     onEdit={handleEditTask}
+                                    onDelete={handleDeleteTask}
                                 />
                             ))
                         )}

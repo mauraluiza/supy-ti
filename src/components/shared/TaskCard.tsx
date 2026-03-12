@@ -1,6 +1,6 @@
 import type { Task } from "../../types";
-import { Clock, CheckSquare, AlertCircle, PlayCircle } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
+import { Clock, CheckSquare, AlertCircle, PlayCircle, Edit, Trash2 } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { cn, formatRelativeTime } from "../../lib/utils";
 
 interface TaskCardProps {
@@ -33,7 +33,7 @@ const statusMap = {
     },
 };
 
-export function TaskCard({ task, onEdit, interactive = true }: TaskCardProps) {
+export function TaskCard({ task, onEdit, onDelete, interactive = true }: TaskCardProps) {
     const config = statusMap[task.status] || statusMap.pending;
     const StatusIcon = config.icon;
     const clientName = task.client?.name;
@@ -57,9 +57,32 @@ export function TaskCard({ task, onEdit, interactive = true }: TaskCardProps) {
                         <StatusIcon size={12} />
                         {config.label}
                     </span>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap mt-1 min-w-max">
-                        {formatRelativeTime(task.created_at)}
-                    </span>
+                    
+                    {/* Data formatada e Ações ao Hover */}
+                    <div className="flex flex-col items-end gap-1">
+                        <span className="text-xs text-muted-foreground whitespace-nowrap min-w-max group-hover:opacity-0 transition-opacity">
+                            {formatRelativeTime(task.created_at)}
+                        </span>
+                        
+                        {interactive && (
+                            <div className="absolute top-4 right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white dark:bg-card shadow-sm border border-border rounded-md p-0.5">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onEdit?.(task); }}
+                                    className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-sm transition-colors"
+                                    title="Editar Tarefa"
+                                >
+                                    <Edit size={14} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onDelete?.(task.id); }}
+                                    className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-sm transition-colors"
+                                    title="Excluir Tarefa"
+                                >
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <CardTitle className="text-base font-semibold leading-tight mt-2 text-foreground break-words line-clamp-1" title={task.title}>
                     {task.title}
@@ -78,11 +101,6 @@ export function TaskCard({ task, onEdit, interactive = true }: TaskCardProps) {
                     {plainDescription || "Sem descrição..."}
                 </p>
             </CardContent>
-            {interactive && (
-                <CardFooter className="pt-0 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity mt-auto">
-                    <span className="text-xs text-primary font-medium">Clique para editar</span>
-                </CardFooter>
-            )}
         </Card>
     );
 }
