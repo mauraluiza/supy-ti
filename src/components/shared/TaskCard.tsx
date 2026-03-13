@@ -1,6 +1,6 @@
 import type { Task } from "../../types";
-import { Clock, CheckSquare, AlertCircle, PlayCircle, Edit, Trash2, Check, Undo } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Clock, CheckSquare, AlertCircle, PlayCircle, Edit, Trash2, Check, Undo, Hash, Users } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
 import { cn, formatRelativeTime } from "../../lib/utils";
 
 interface TaskCardProps {
@@ -105,10 +105,10 @@ export function TaskCard({ task, onEdit, onDelete, onToggleStatus, interactive =
                     {task.title}
                 </CardTitle>
                 {clientName && (
-                    <div className="mt-1 flex items-center">
-                        <span className="text-xs text-muted-foreground font-medium truncate">
+                    <div className="mt-1 flex items-center gap-1.5 min-h-[16px]">
+                        <Users size={14} className="text-gray-500 dark:text-gray-400 shrink-0" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300 font-medium truncate">
                             {clientName}
-                            {task.ticket ? ` • ${task.ticket}` : ''}
                         </span>
                     </div>
                 )}
@@ -118,6 +118,14 @@ export function TaskCard({ task, onEdit, onDelete, onToggleStatus, interactive =
                     {plainDescription || "Sem descrição..."}
                 </p>
             </CardContent>
+            {task.ticket && (
+                <CardFooter className="pt-0 mt-auto pb-4">
+                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-gray-200 bg-gray-50 text-[11px] font-medium text-muted-foreground dark:bg-gray-800/40 dark:border-gray-800">
+                        <Hash size={12} className="text-gray-400" />
+                        {task.ticket.replace(/^#/, '')}
+                    </span>
+                </CardFooter>
+            )}
         </Card>
     );
 }
