@@ -53,6 +53,7 @@ export interface Task {
     user_id: string;
     title: string;
     ticket?: string;
+    due_at?: string;
     description: string;
     status: 'urgent' | 'in_progress' | 'pending' | 'done';
     previous_status?: 'urgent' | 'in_progress' | 'pending' | 'done' | null;

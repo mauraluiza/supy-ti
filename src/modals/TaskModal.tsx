@@ -23,6 +23,7 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
     // Form States
     const [title, setTitle] = useState('');
     const [ticket, setTicket] = useState('');
+    const [dueAt, setDueAt] = useState('');
     const [clientId, setClientId] = useState('');
     const [status, setStatus] = useState<'urgent' | 'in_progress' | 'pending' | 'done'>('pending');
     const [description, setDescription] = useState('');
@@ -54,6 +55,7 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
             if (taskToEdit) {
                 setTitle(taskToEdit.title || '');
                 setTicket(taskToEdit.ticket || '');
+                setDueAt(taskToEdit.due_at ? new Date(taskToEdit.due_at).toISOString().slice(0, 16) : '');
                 setClientId(taskToEdit.client_id || '');
                 setStatus(taskToEdit.status);
                 setDescription(taskToEdit.description || '');
@@ -61,6 +63,7 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
                 // Reset
                 setTitle('');
                 setTicket('');
+                setDueAt('');
                 setClientId('');
                 setStatus('pending');
                 setDescription('');
@@ -82,6 +85,7 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
                 user_id: user.id,
                 title: title.trim(),
                 ticket: ticket.trim() || null,
+                due_at: dueAt ? new Date(dueAt).toISOString() : null,
                 client_id: clientId || null,
                 status,
                 description,
@@ -198,7 +202,22 @@ export function TaskModal({ isOpen, onClose, onSuccess, taskToEdit }: TaskModalP
                         </div>
                     </div>
 
-                    {/* Linha 2: Descrição Rica */}
+                    {/* Linha 3: Prazo */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-1">
+                                Prazo <span className="text-muted-foreground font-normal">(opcional)</span>
+                            </label>
+                            <input
+                                type="datetime-local"
+                                value={dueAt}
+                                onChange={(e) => setDueAt(e.target.value)}
+                                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary sm:text-sm"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Linha 4: Descrição Rica */}
                     <div className="flex-1 flex flex-col min-h-0">
                         <label className="block text-sm font-medium text-foreground mb-1">
                             Descrição <span className="text-red-500">*</span>

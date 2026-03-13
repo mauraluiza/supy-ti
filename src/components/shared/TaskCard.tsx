@@ -38,15 +38,35 @@ const statusMap = {
     },
 };
 
+function formatDueAt(dateString: string) {
+    const d = new Date(dateString);
+    const day = d.getDate();
+    const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    const month = months[d.getMonth()];
+    const h = d.getHours();
+    const m = d.getMinutes().toString().padStart(2, '0');
+    return `${day} ${month} ${h}h${m}`;
+}
+
 export function TaskCard({ task, onEdit, onDelete, onToggleStatus, interactive = true }: TaskCardProps) {
-    const config = statusMap[task.status] || statusMap.pending;
+    const baseConfig = statusMap[task.status] || statusMap.pending;
+    const isDone = task.status === 'done';
+    const isDelayed = task.due_at ? new Date(task.due_at) < new Date() : false;
+    const showDelayed = isDelayed && !isDone;
+
+    const config = showDelayed ? {
+        label: "Atrasada",
+        color: "text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800",
+        borderColor: baseConfig.borderColor,
+        icon: AlertCircle
+    } : baseConfig;
+
     const StatusIcon = config.icon;
     const clientName = task.client?.name;
 
     // Parse description HTML content to plain text for preview
     // This is useful if description is rich text (HTML)
     const plainDescription = task.description.replace(/<[^>]+>/g, '');
-    const isDone = task.status === 'done';
 
     return (
         <Card
@@ -118,12 +138,20 @@ export function TaskCard({ task, onEdit, onDelete, onToggleStatus, interactive =
                     {plainDescription || "Sem descrição..."}
                 </p>
             </CardContent>
-            {task.ticket && (
-                <CardFooter className="pt-0 mt-auto pb-4">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-gray-200 bg-gray-50 text-[11px] font-medium text-muted-foreground dark:bg-gray-800/40 dark:border-gray-800">
-                        <Hash size={12} className="text-gray-400" />
-                        {task.ticket.replace(/^#/, '')}
-                    </span>
+            {(task.ticket || task.due_at) && (
+                <CardFooter className="pt-0 mt-auto pb-4 gap-2 flex flex-wrap">
+                    {task.ticket && (
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-gray-200 bg-gray-50 text-[11px] font-medium text-muted-foreground dark:bg-gray-800/40 dark:border-gray-800">
+                            <Hash size={12} className="text-gray-400" />
+                            {task.ticket.replace(/^#/, '')}
+                        </span>
+                    )}
+                    {task.due_at && (
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border border-gray-200 bg-gray-50 text-[11px] font-medium text-muted-foreground dark:bg-gray-800/40 dark:border-gray-800">
+                            <Clock size={12} className="text-gray-400" />
+                            {formatDueAt(task.due_at)}
+                        </span>
+                    )}
                 </CardFooter>
             )}
         </Card>
