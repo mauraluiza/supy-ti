@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { noteService } from '../../services/supabase';
 import type { Note } from '../../types';
-import { StickyNote, Plus } from 'lucide-react';
+import { StickyNote, Plus, Filter, ChevronDown, X } from 'lucide-react';
 import { NoteCard } from '../../components/shared/NoteCard';
 import { Button } from '../../components/ui/button';
 import { PageContainer } from '../../components/layout/page/PageContainer';
@@ -13,7 +13,11 @@ import { NoteModal } from '../../modals/NoteModal';
 export function Notes() {
     const [notes, setNotes] = useState<Note[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState<{ search: string, favorite: boolean | null }>({
+        search: '',
+        favorite: null
+    });
+    const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -87,12 +91,20 @@ export function Notes() {
 
     // Filter Logic
     const filteredNotes = notes.filter(note => {
-        const search = searchTerm.toLowerCase();
-        return (
-            note.title.toLowerCase().includes(search) ||
-            (note.content && note.content.toLowerCase().includes(search))
-        );
+        const titleLower = note.title.toLowerCase();
+        const searchLower = filters.search.toLowerCase();
+        
+        const matchesSearch = filters.search === "" || titleLower.includes(searchLower);
+        
+        let matchesFavorite = true;
+        if (filters.favorite !== null) {
+            matchesFavorite = note.is_favorite === filters.favorite;
+        }
+
+        return matchesSearch && matchesFavorite;
     });
+
+    const activeFiltersCount = filters.favorite !== null ? 1 : 0;
 
     return (
         <PageContainer>
@@ -108,14 +120,89 @@ export function Notes() {
                 }
             />
 
-            <div className="flex flex-col space-y-6">
-                <PageSearch
-                    value={searchTerm}
-                    onChange={setSearchTerm}
-                    placeholder="Buscar por título ou conteúdo..."
-                    totalResultCount={notes.length}
-                    filteredResultCount={filteredNotes.length}
-                />
+            <div className="flex flex-col space-y-4">
+                {/* Cabeçalho de Busca e Filtros */}
+                <div className="flex flex-col space-y-2 pb-1">
+                    <div className="flex items-center gap-2 relative">
+                        <PageSearch
+                            value={filters.search}
+                            onChange={(val) => setFilters(prev => ({ ...prev, search: val }))}
+                            placeholder="Buscar por título da nota..."
+                            className="flex-1 max-w-lg min-w-0 [&_input]:bg-white [&_input]:border-gray-200 shadow-sm"
+                        />
+
+                        <div className="relative">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+                                className="flex items-center gap-2"
+                            >
+                                <Filter size={16} />
+                                {activeFiltersCount > 0 ? `Filtros (${activeFiltersCount})` : 'Filtros'}
+                                <ChevronDown size={14} className={`text-muted-foreground transition-transform ${isFiltersOpen ? 'rotate-180' : ''}`} />
+                            </Button>
+
+                            {isFiltersOpen && (
+                                <div className="absolute right-0 top-full mt-2 w-64 rounded-md border border-border bg-background p-4 shadow-lg z-10">
+                                    <div className="space-y-4">
+                                        <div>
+                                            <h4 className="font-medium text-sm mb-2 text-foreground">Status</h4>
+                                            <div className="space-y-2">
+                                                <label className="flex items-center space-x-2 cursor-pointer text-sm">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="rounded border-gray-300 text-primary focus:ring-primary w-4 h-4 cursor-pointer align-middle"
+                                                        checked={filters.favorite === true}
+                                                        onChange={(e) => {
+                                                            setFilters(prev => ({
+                                                                ...prev,
+                                                                favorite: e.target.checked ? true : null
+                                                            }));
+                                                        }}
+                                                    />
+                                                    <span className="text-muted-foreground">Favoritos</span>
+                                                </label>
+                                                <label className="flex items-center space-x-2 cursor-pointer text-sm">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="rounded border-gray-300 text-primary focus:ring-primary w-4 h-4 cursor-pointer align-middle"
+                                                        checked={filters.favorite === false}
+                                                        onChange={(e) => {
+                                                            setFilters(prev => ({
+                                                                ...prev,
+                                                                favorite: e.target.checked ? false : null
+                                                            }));
+                                                        }}
+                                                    />
+                                                    <span className="text-muted-foreground">Não favoritos</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {activeFiltersCount > 0 && (
+                        <div className="flex flex-wrap items-center gap-2">
+                            {filters.favorite !== null && (
+                                <span className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-foreground rounded-full px-3 py-1 text-xs font-medium flex items-center gap-1 transition-colors">
+                                    Status: {filters.favorite ? 'Favoritos' : 'Não favoritos'}
+                                    <button
+                                        onClick={() => setFilters(prev => ({ ...prev, favorite: null }))}
+                                        className="text-muted-foreground hover:text-destructive flex items-center justify-center transition-colors focus:outline-none ml-0.5"
+                                    >
+                                        <X size={12} />
+                                    </button>
+                                </span>
+                            )}
+                        </div>
+                    )}
+                    <div className="text-sm text-gray-500">
+                        {filteredNotes.length} {filteredNotes.length === 1 ? 'nota' : 'notas'}
+                    </div>
+                </div>
 
                 {loading ? (
                     <div className="text-center py-12">
@@ -128,11 +215,11 @@ export function Notes() {
                             <div className="col-span-full">
                                 <EmptyState
                                     title="Nenhuma nota encontrada"
-                                    description={searchTerm ? "Não encontramos nada com esse termo." : "Cadastre procedimentos e senhas para facilitar o dia a dia."}
+                                    description={(filters.search || filters.favorite !== null) ? "Não encontramos nada com esses filtros." : "Cadastre procedimentos e senhas para facilitar o dia a dia."}
                                     icon={StickyNote}
                                     action={
-                                        searchTerm && (
-                                            <Button variant="outline" onClick={() => setSearchTerm('')}>
+                                        (filters.search || filters.favorite !== null) && (
+                                            <Button variant="outline" onClick={() => setFilters({ search: '', favorite: null })}>
                                                 Limpar Filtros
                                             </Button>
                                         )
