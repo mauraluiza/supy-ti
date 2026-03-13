@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Trash2, AlertCircle, Star } from 'lucide-react';
+import { Save, Trash2, AlertCircle, Star, X } from 'lucide-react';
 import { noteService } from '../services/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import type { Note } from '../types';
@@ -23,6 +23,8 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [isFavorite, setIsFavorite] = useState(false);
+    const [tags, setTags] = useState<string[]>([]);
+    const [tagInput, setTagInput] = useState('');
 
     // Delete Confirmation
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -34,12 +36,15 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
                 setTitle(noteToEdit.title);
                 setContent(noteToEdit.content);
                 setIsFavorite(noteToEdit.is_favorite);
+                setTags(noteToEdit.tags || []);
             } else {
                 // Reset
                 setTitle('');
                 setContent('');
                 setIsFavorite(false);
+                setTags([]);
             }
+            setTagInput('');
             setShowDeleteConfirm(false);
         }
     }, [isOpen, noteToEdit]);
@@ -58,6 +63,7 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
                 title,
                 content,
                 is_favorite: isFavorite,
+                tags
             };
 
             if (noteToEdit) {
@@ -89,6 +95,21 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = tagInput.trim();
+            if (val && !tags.includes(val)) {
+                setTags([...tags, val]);
+                setTagInput('');
+            }
+        }
+    };
+    
+    const removeTag = (tagToRemove: string) => {
+        setTags(tags.filter(t => t !== tagToRemove));
     };
 
     return (
@@ -131,6 +152,39 @@ export function NoteModal({ isOpen, onClose, onSuccess, noteToEdit }: NoteModalP
                             className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary font-medium text-lg"
                             placeholder="Ex: Senhas de Wifi, Procedimento de Reboot..."
                         />
+                    </div>
+
+                    {/* Tags */}
+                    <div>
+                        <label className="block text-sm font-medium text-foreground mb-1">
+                            Tags <span className="text-muted-foreground font-normal">(pressione Enter para adicionar)</span>
+                        </label>
+                        <div className="flex flex-col gap-2">
+                            <input
+                                type="text"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyDown={handleTagKeyDown}
+                                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground focus:ring-2 focus:ring-primary sm:text-sm"
+                                placeholder="Ex: Servidor, Acesso, TEF..."
+                            />
+                            {tags.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {tags.map((tag, idx) => (
+                                        <span key={idx} className="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm px-2.5 py-1 rounded-md font-medium">
+                                            {tag}
+                                            <button
+                                                type="button"
+                                                onClick={() => removeTag(tag)}
+                                                className="text-gray-400 hover:text-red-500 focus:outline-none"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Editor Rico */}
