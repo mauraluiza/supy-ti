@@ -53,6 +53,10 @@ Estrutura baseada em:
 ✔ Modais de cadastro padronizados  
 ✔ Integração parcial com banco  
 ✔ Empty states padronizados  
+✔ Padronização visual dos Cards (Tarefas e Notas)  
+✔ Sistema avançado de Busca e Filtros unificado (Clientes, Tarefas, Notas)  
+✔ Gestão de Prazos (due_at) e Tickets em Tarefas  
+✔ Sistema de categorização por Tags em Notas
 
 ---
 
@@ -95,18 +99,21 @@ Sempre verificar schema antes de alterar.
 
 ## 8️⃣ Estado Atual do Projeto
 
-Descrever aqui rapidamente onde paramos e o que será feito a seguir.
+Acabamos de finalizar uma grande unificação visual e estrutural no sistema:
+- **Tarefas**: Inclusão de `due_at` (prazos), detecção de tarefas "Atrasadas", campo de `ticket` autônomo e buscas interligadas.
+- **Notas**: Alinhamento do design dos cards com Tarefas (`min-h-[120px]`), melhoria no hover de ações (Favoritar, Editar, Excluir), e implementação de `tags` dinâmicas usando JSONB.
+- **Filtros**: Componente `PageSearch` consolidado em todas as listagens usando Dropdowns modernos.
 
-Exemplo:
-Atualmente estamos refinando comportamentos do Dashboard.
+O projeto está com a arquitetura do Frontend bastante sólida, responsiva e consistente.
 
 ---
 
 ## 9️⃣ Próximo Objetivo
 
-Descrever aqui o que deseja implementar agora.
-
----
+Aguardando definição do usuário. Possíveis caminhos:
+- Finalizar integrações pendentes com Supabase.
+- Testes gerais das novas features de Notas e Tarefas.
+- Implementação de novos módulos (ex: automações, relatórios).
 
 ⚠️ IMPORTANTE:
 Explique sempre o plano antes de começar a codar.

@@ -55,19 +55,26 @@ Armazena os clientes do sistema.
 - **created_at / updated_at:** Timestamps automáticos (Gerenciados via Trigger).
 
 ### Tabela `tasks`
-Tarefas vinculadas a clientes.
+Tarefas e chamados internos.
 - **id (UUID):** Identificador único.
-- **client_id (UUID):** FK para `clients`.
-- **description (Text):** Conteúdo da tarefa (HTML/Rich Text).
+- **user_id (UUID):** FK do autor.
+- **client_id (UUID, Nullable):** FK opcional para `clients`.
+- **title (Text):** Título rápido da tarefa.
+- **ticket (Text, Nullable):** Código identificador de suporte interno.
+- **due_at (Timestamp with Time Zone, Nullable):** Prazo estipulado. Se no passado e não concluído, a tarefa assume status "Atrasada".
+- **description (Text):** Conteúdo detalhado da tarefa (HTML/Rich Text).
 - **status (Text):** 'urgent' | 'in_progress' | 'pending' | 'done'.
+- **previous_status (Text, Nullable):** Backup do status ao concluir a tarefa (para possível restauração de Undo).
 - **created_at / updated_at:** Timestamps automáticos.
 
 ### Tabela `notes`
 Anotações gerais.
 - **id (UUID):** Identificador único.
+- **user_id (UUID):** FK do autor.
 - **title (Text):** Título da nota.
 - **content (Text):** Conteúdo enriquecido.
-- **is_favorite (Boolean):** Flag de destaque.
+- **is_favorite (Boolean):** Flag de destaque (renderiza borda dourada nos cards).
+- **tags (JSONB, Nullable):** Categorizações vinculadas à anotação.
 - **created_at / updated_at:** Timestamps automáticos.
 
 ---
