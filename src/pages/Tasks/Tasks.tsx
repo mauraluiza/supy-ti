@@ -113,10 +113,11 @@ export function Tasks() {
     const filteredTasks = tasks.filter(task => {
         const clientNameLower = (task.client?.name || '').toLowerCase();
         const titleLower = (task.title || '').toLowerCase();
+        const ticketLower = (task.ticket || '').toLowerCase();
         const searchLower = filters.search.toLowerCase();
 
         const matchesSearch = filters.search === "" || (
-            clientNameLower.includes(searchLower) || titleLower.includes(searchLower)
+            clientNameLower.includes(searchLower) || titleLower.includes(searchLower) || ticketLower.includes(searchLower)
         );
 
         const matchesClient = filters.clients.length === 0 || (task.client?.name && filters.clients.includes(task.client.name));
@@ -148,7 +149,7 @@ export function Tasks() {
                         <PageSearch
                             value={filters.search}
                             onChange={(val) => setFilters(prev => ({ ...prev, search: val }))}
-                            placeholder="Buscar por título da tarefa ou cliente..."
+                            placeholder="Buscar tarefa, cliente ou ticket..."
                             className="flex-1 max-w-lg min-w-0 [&_input]:bg-white [&_input]:border-gray-200 shadow-sm"
                         />
 
