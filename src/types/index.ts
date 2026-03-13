@@ -55,6 +55,7 @@ export interface Task {
     ticket?: string;
     description: string;
     status: 'urgent' | 'in_progress' | 'pending' | 'done';
+    previous_status?: 'urgent' | 'in_progress' | 'pending' | 'done' | null;
     created_at: string;
     updated_at: string;
     client?: Client; // Join

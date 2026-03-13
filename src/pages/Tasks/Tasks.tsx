@@ -66,6 +66,29 @@ export function Tasks() {
         setIsModalOpen(true);
     };
 
+    const handleToggleTaskStatus = async (task: Task) => {
+        try {
+            if (task.status === 'done') {
+                // Reabrir
+                const newStatus = task.previous_status || 'pending';
+                await taskService.updateTask(task.id, {
+                    status: newStatus,
+                    previous_status: null
+                });
+            } else {
+                // Concluir
+                await taskService.updateTask(task.id, {
+                    status: 'done',
+                    previous_status: task.status
+                });
+            }
+            fetchTasks();
+        } catch (error) {
+            console.error("Erro ao alterar status da tarefa:", error);
+            alert("Erro ao alterar status da tarefa.");
+        }
+    };
+
     const handleDeleteTask = async (taskId: string) => {
         if (!window.confirm("Certeza que deseja excluir esta tarefa?")) return;
         try {
@@ -269,6 +292,7 @@ export function Tasks() {
                                     task={task}
                                     onEdit={handleEditTask}
                                     onDelete={handleDeleteTask}
+                                    onToggleStatus={handleToggleTaskStatus}
                                 />
                             ))
                         )}

@@ -1,5 +1,5 @@
 import type { Task } from "../../types";
-import { Clock, CheckSquare, AlertCircle, PlayCircle, Edit, Trash2 } from "lucide-react";
+import { Clock, CheckSquare, AlertCircle, PlayCircle, Edit, Trash2, Check, Undo } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { cn, formatRelativeTime } from "../../lib/utils";
 
@@ -7,6 +7,7 @@ interface TaskCardProps {
     task: Task;
     onEdit?: (task: Task) => void;
     onDelete?: (taskId: string) => void;
+    onToggleStatus?: (task: Task) => void;
     interactive?: boolean;
 }
 
@@ -33,7 +34,7 @@ const statusMap = {
     },
 };
 
-export function TaskCard({ task, onEdit, onDelete, interactive = true }: TaskCardProps) {
+export function TaskCard({ task, onEdit, onDelete, onToggleStatus, interactive = true }: TaskCardProps) {
     const config = statusMap[task.status] || statusMap.pending;
     const StatusIcon = config.icon;
     const clientName = task.client?.name;
@@ -67,16 +68,23 @@ export function TaskCard({ task, onEdit, onDelete, interactive = true }: TaskCar
                         {interactive && (
                             <div className="absolute top-4 right-4 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-white dark:bg-card shadow-sm border border-border rounded-md p-0.5">
                                 <button
+                                    onClick={(e) => { e.stopPropagation(); onToggleStatus?.(task); }}
+                                    className="p-1.5 text-muted-foreground hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/40 rounded-sm transition-colors"
+                                    title={task.status === 'done' ? "Reabrir tarefa" : "Concluir tarefa"}
+                                >
+                                    {task.status === 'done' ? <Undo size={14} /> : <Check size={14} />}
+                                </button>
+                                <button
                                     onClick={(e) => { e.stopPropagation(); onEdit?.(task); }}
                                     className="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-sm transition-colors"
-                                    title="Editar Tarefa"
+                                    title="Editar"
                                 >
                                     <Edit size={14} />
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); onDelete?.(task.id); }}
                                     className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-sm transition-colors"
-                                    title="Excluir Tarefa"
+                                    title="Excluir"
                                 >
                                     <Trash2 size={14} />
                                 </button>
