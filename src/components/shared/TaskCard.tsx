@@ -15,21 +15,25 @@ const statusMap = {
     urgent: {
         label: "Urgente",
         color: "text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400 border-red-200 dark:border-red-800",
+        borderColor: "border-l-red-500",
         icon: AlertCircle
     },
     in_progress: {
         label: "Em Andamento",
-        color: "text-orange-600 bg-orange-50 dark:bg-orange-900/30 dark:text-orange-400 border-orange-200 dark:border-orange-800",
+        color: "text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+        borderColor: "border-l-blue-500",
         icon: PlayCircle
     },
     pending: {
         label: "Pendente",
         color: "text-yellow-600 bg-yellow-50 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
+        borderColor: "border-l-yellow-500",
         icon: Clock
     },
     done: {
         label: "Concluída",
         color: "text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800",
+        borderColor: "border-l-green-500",
         icon: CheckSquare
     },
 };
@@ -42,14 +46,16 @@ export function TaskCard({ task, onEdit, onDelete, onToggleStatus, interactive =
     // Parse description HTML content to plain text for preview
     // This is useful if description is rich text (HTML)
     const plainDescription = task.description.replace(/<[^>]+>/g, '');
+    const isDone = task.status === 'done';
 
     return (
         <Card
             className={cn(
                 "border-l-4 overflow-hidden relative min-h-[120px] flex flex-col",
-                interactive ? "group hover:shadow-md transition-all cursor-pointer" : "cursor-default"
+                config.borderColor,
+                interactive ? "group hover:shadow-md transition-all cursor-pointer" : "cursor-default",
+                isDone && "bg-gray-50/80 dark:bg-gray-900/50 opacity-65 hover:opacity-100 transition-opacity"
             )}
-            style={{ borderLeftColor: `var(--color-${task.status === 'urgent' ? 'red' : task.status === 'in_progress' ? 'orange' : task.status === 'done' ? 'green' : 'yellow'}-500)` }}
             onClick={() => interactive && onEdit?.(task)}
         >
             <CardHeader className="pb-2">
@@ -92,7 +98,10 @@ export function TaskCard({ task, onEdit, onDelete, onToggleStatus, interactive =
                         )}
                     </div>
                 </div>
-                <CardTitle className="text-base font-semibold leading-tight mt-2 text-foreground break-words line-clamp-1" title={task.title}>
+                <CardTitle className={cn(
+                    "text-base font-semibold leading-tight mt-2 break-words line-clamp-1 transition-colors",
+                    isDone ? "line-through text-muted-foreground" : "text-foreground"
+                )} title={task.title}>
                     {task.title}
                 </CardTitle>
                 {clientName && (
