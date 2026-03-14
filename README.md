@@ -1,4 +1,4 @@
-# Suppy - Sistema de Suporte Técnico
+# Supy TI - Sistema de Suporte Técnico
 
 ## Visão Geral
 Aplicação web moderna para gerenciamento de suporte técnico, desenvolvida com React e TypeScript.
