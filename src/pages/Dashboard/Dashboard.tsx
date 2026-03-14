@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Users, Clock, Star } from 'lucide-react';
+import { Users, Clock, Star, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { clientService, taskService, noteService } from '../../services/supabase';
 import { DashboardSectionHeader } from '../../components/shared/DashboardSectionHeader';
 import { TaskCard } from '../../components/shared/TaskCard';
@@ -20,6 +20,13 @@ export function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [isHoveringTable, setIsHoveringTable] = useState(false);
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+    const [metrics, setMetrics] = useState({
+        activeClients: 0,
+        pendingTasks: 0,
+        lateTasks: 0,
+        doneToday: 0,
+        totalNotes: 0
+    });
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -38,6 +45,24 @@ export function Dashboard() {
                     const diffTime = now.getTime() - date.getTime();
                     return diffTime <= days * 24 * 60 * 60 * 1000 && diffTime >= 0;
                 };
+
+                // Metricas Globais
+                const now = new Date();
+                const todayStr = now.toDateString();
+
+                const activeClientsCount = clientsData.filter(c => c.status === 'active').length;
+                const pendingTasksCount = tasksData.filter(t => t.status === 'pending').length;
+                const lateTasksCount = tasksData.filter(t => t.due_at && new Date(t.due_at) < now && t.status !== 'done').length;
+                const doneTodayCount = tasksData.filter(t => t.status === 'done' && new Date(t.updated_at).toDateString() === todayStr).length;
+                const notesCount = notesData.length;
+
+                setMetrics({
+                    activeClients: activeClientsCount,
+                    pendingTasks: pendingTasksCount,
+                    lateTasks: lateTasksCount,
+                    doneToday: doneTodayCount,
+                    totalNotes: notesCount
+                });
 
                 // Limit for dashboard display based on 7 days logic
                 const dashActiveClients = getActiveClients(clientsData);
@@ -105,6 +130,49 @@ export function Dashboard() {
                 <p className="text-sm text-gray-500">
                     {displayDate}
                 </p>
+            </div>
+
+            {/* MÉTRICAS */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="bg-white dark:bg-card rounded-lg p-4 border border-border shadow-sm flex flex-col justify-center gap-1">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <Users size={16} />
+                        <span className="text-sm font-medium">Clientes</span>
+                    </div>
+                    <span className="text-2xl font-bold">{metrics.activeClients}</span>
+                </div>
+                
+                <div className="bg-white dark:bg-card rounded-lg p-4 border border-border shadow-sm flex flex-col justify-center gap-1">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <Clock size={16} className="text-orange-500" />
+                        <span className="text-sm font-medium">Pendentes</span>
+                    </div>
+                    <span className="text-2xl font-bold">{metrics.pendingTasks}</span>
+                </div>
+
+                <div className="bg-white dark:bg-card rounded-lg p-4 border border-border shadow-sm flex flex-col justify-center gap-1">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <AlertTriangle size={16} className="text-red-500" />
+                        <span className="text-sm font-medium">Atrasadas</span>
+                    </div>
+                    <span className="text-2xl font-bold">{metrics.lateTasks}</span>
+                </div>
+
+                <div className="bg-white dark:bg-card rounded-lg p-4 border border-border shadow-sm flex flex-col justify-center gap-1">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <CheckCircle2 size={16} className="text-green-500" />
+                        <span className="text-sm font-medium">Concluídas hoje</span>
+                    </div>
+                    <span className="text-2xl font-bold">{metrics.doneToday}</span>
+                </div>
+
+                <div className="bg-white dark:bg-card rounded-lg p-4 border border-border shadow-sm flex flex-col justify-center gap-1">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                        <Star size={16} className="text-yellow-500" />
+                        <span className="text-sm font-medium">Notas</span>
+                    </div>
+                    <span className="text-2xl font-bold">{metrics.totalNotes}</span>
+                </div>
             </div>
 
             {/* SEÇÃO 1: CLIENTES RECENTES */}
