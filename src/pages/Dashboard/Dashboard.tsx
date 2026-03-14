@@ -31,11 +31,30 @@ export function Dashboard() {
                     noteService.getNotes()
                 ]);
 
-                // Limit for dashboard display
+                const isWithinLastDays = (dateString: string, days: number) => {
+                    if (!dateString) return false;
+                    const date = new Date(dateString);
+                    const now = new Date();
+                    const diffTime = now.getTime() - date.getTime();
+                    return diffTime <= days * 24 * 60 * 60 * 1000 && diffTime >= 0;
+                };
+
+                // Limit for dashboard display based on 7 days logic
                 const dashActiveClients = getActiveClients(clientsData);
-                setClients(dashActiveClients.slice(0, 5));
-                setTasks(tasksData.slice(0, 5));
-                setNotes(notesData.slice(0, 3));
+                const recentActiveClients = dashActiveClients.filter(c => isWithinLastDays(c.created_at, 7));
+                setClients(recentActiveClients.length > 0 ? recentActiveClients : dashActiveClients.slice(0, 3));
+
+                const recentTasks = tasksData.filter(t => isWithinLastDays(t.created_at, 7));
+                setTasks(recentTasks.length > 0 ? recentTasks : tasksData.slice(0, 4));
+
+                const recentNotes = notesData.filter(n => isWithinLastDays(n.created_at, 7));
+                if (recentNotes.length > 0) {
+                    setNotes(recentNotes);
+                } else {
+                    const favoriteNotes = notesData.filter(n => n.is_favorite);
+                    const otherNotes = notesData.filter(n => !n.is_favorite);
+                    setNotes([...favoriteNotes, ...otherNotes].slice(0, 4));
+                }
             } catch (error) {
                 console.error("Erro ao carregar dashboard:", error);
             } finally {
@@ -94,6 +113,7 @@ export function Dashboard() {
                     title="Clientes adicionados recentemente"
                     icon={<Users size={18} className="text-primary" />}
                     navigateTo="/clients"
+                    count={clients.length}
                 />
 
                 <div
@@ -183,6 +203,7 @@ export function Dashboard() {
                     title="Tarefas Recentes"
                     icon={<Clock size={18} className="text-orange-500" />}
                     navigateTo="/tasks"
+                    count={tasks.length}
                 />
 
                 {/* Horizontal Scroll Container */}
@@ -207,6 +228,7 @@ export function Dashboard() {
                     title="Notas Rápidas"
                     icon={<Star size={18} className="text-yellow-500" />}
                     navigateTo="/notes"
+                    count={notes.length}
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
