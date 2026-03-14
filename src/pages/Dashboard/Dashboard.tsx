@@ -9,8 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { getClientRowClass, getActiveClients } from '../../lib/utils';
 import type { Client, Task, Note } from '../../types';
+import { useAuth } from '../../contexts/AuthContext';
 
 export function Dashboard() {
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [clients, setClients] = useState<Client[]>([]);
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -62,8 +64,29 @@ export function Dashboard() {
         );
     }
 
+    const fullName = user?.user_metadata?.name || user?.user_metadata?.full_name || '';
+    const firstName = user?.user_metadata?.first_name || fullName.split(' ')[0] || '';
+
+    const currentDate = new Date();
+    const formattedDate = new Intl.DateTimeFormat('pt-BR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+    }).format(currentDate);
+    const displayDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
     return (
         <div className="space-y-6 lg:h-full lg:overflow-y-hidden">
+
+            {/* SAUDAÇÃO E DATA */}
+            <div className="mb-6">
+                <h1 className="text-lg font-semibold">
+                    {firstName ? `Olá, ${firstName} 👋` : 'Olá 👋'}
+                </h1>
+                <p className="text-sm text-gray-500">
+                    {displayDate}
+                </p>
+            </div>
 
             {/* SEÇÃO 1: CLIENTES RECENTES */}
             <section className="space-y-3">
