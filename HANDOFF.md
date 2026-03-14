@@ -3,7 +3,7 @@
 ## 1️⃣ Informações Gerais
 
 Nome do projeto: Supy TI  
-Tipo: Sistema interno de gestão de clientes e tarefas  
+Tipo: Sistema interno de gestão de clientes, tarefas e notas  
 Status: Em desenvolvimento ativo  
 
 Objetivo do projeto:
@@ -43,15 +43,15 @@ Estrutura baseada em:
 
 ---
 
-## 4️⃣ Funcionalidades Já Implementadas
+## 4️⃣ Funcionalidades já implementadas
 
 ✔ Login com autenticação Supabase  
 ✔ Dashboard  
 ✔ Tela de Clientes  
 ✔ Tela de Tarefas  
-✔ Tela de Informações Gerais  
+✔ Tela de Notas  
 ✔ Modais de cadastro padronizados  
-✔ Integração parcial com banco  
+✔ Integração com banco  
 ✔ Empty states padronizados  
 ✔ Padronização visual dos Cards (Tarefas e Notas)  
 ✔ Sistema avançado de Busca e Filtros unificado (Clientes, Tarefas, Notas)  
@@ -62,14 +62,12 @@ Estrutura baseada em:
 
 ## 5️⃣ Regras de Arquitetura (OBRIGATÓRIO)
 
-1. Sempre explicar antes de implementar.
-2. Trabalhar por etapas pequenas.
-3. Não tomar decisões silenciosamente.
-4. Seguir o design system existente.
-5. Componentes devem ser reutilizáveis.
-6. Separar lógica de UI.
-7. Código limpo e escalável.
-8. Evitar duplicação.
+1. Trabalhar por etapas pequenas.
+2. Seguir o design system definido para o projeto.
+3. Componentes devem ser reutilizáveis sempre que possível.
+4. Separar lógica de UI.
+5. Código limpo e escalável.
+6. Evitar duplicação.
 
 ---
 
@@ -79,7 +77,7 @@ Estrutura baseada em:
 - Dashboard é apenas visual (não interativo nos cards)
 - Empty states padronizados
 - Modais centralizados com overlay desfocado
-- Nome do sistema: Supy TI (apenas 1 P)
+- Nome do sistema: Supy TI
 - Logo oficial: assets/supy-logo.png
 
 ---
@@ -92,14 +90,10 @@ Estrutura baseada em:
 - Auth funcionando
 - CRUD em implementação
 
-Nunca criar tabela duplicada.
-Sempre verificar schema antes de alterar.
-
 ---
 
 ## 8️⃣ Estado Atual do Projeto
 
-Acabamos de finalizar uma grande unificação visual e estrutural no sistema:
 - **Tarefas**: Inclusão de `due_at` (prazos), detecção de tarefas "Atrasadas", campo de `ticket` autônomo e buscas interligadas.
 - **Notas**: Alinhamento do design dos cards com Tarefas (`min-h-[120px]`), melhoria no hover de ações (Favoritar, Editar, Excluir), e implementação de `tags` dinâmicas usando JSONB.
 - **Filtros**: Componente `PageSearch` consolidado em todas as listagens usando Dropdowns modernos.
@@ -110,11 +104,8 @@ O projeto está com a arquitetura do Frontend bastante sólida, responsiva e con
 
 ## 9️⃣ Próximo Objetivo
 
-Aguardando definição do usuário. Possíveis caminhos:
-- Finalizar integrações pendentes com Supabase.
-- Testes gerais das novas features de Notas e Tarefas.
-- Implementação de novos módulos (ex: automações, relatórios).
-
-⚠️ IMPORTANTE:
-Explique sempre o plano antes de começar a codar.
-Aguarde confirmação antes de implementar.
+Tela de dashboard:
+- Implementar cards de métricas, incluindo quantidade de clientes ativos, tarefas pendentes, atrasadas e concluídas hoje e quantidade de notas cadastradas.
+- Alterar o nome da seção de clientes para clientes adicionados recentemente
+- Incluir saudação no topo e mostrar a data atual.
+- Contadores nas seções.
