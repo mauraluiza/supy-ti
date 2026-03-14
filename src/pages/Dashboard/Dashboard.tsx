@@ -64,22 +64,35 @@ export function Dashboard() {
                     totalNotes: notesCount
                 });
 
-                // Limit for dashboard display based on 7 days logic
+                // --- CLIENTES ---
                 const dashActiveClients = getActiveClients(clientsData);
-                const recentActiveClients = dashActiveClients.filter(c => isWithinLastDays(c.created_at, 7));
-                setClients(recentActiveClients.length > 0 ? recentActiveClients : dashActiveClients.slice(0, 3));
+                const sortedClients = [...dashActiveClients].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+                const recentClients = sortedClients.filter(c => isWithinLastDays(c.created_at, 7));
+                setClients((recentClients.length > 0 ? recentClients : sortedClients).slice(0, 5));
 
-                const recentTasks = tasksData.filter(t => isWithinLastDays(t.created_at, 7));
-                setTasks(recentTasks.length > 0 ? recentTasks : tasksData.slice(0, 4));
+                // --- TAREFAS ---
+                const getTaskPriority = (t: typeof tasksData[0]) => {
+                    if (t.status === 'urgent') return 1;
+                    if (t.due_at && new Date(t.due_at) < now && t.status !== 'done') return 2;
+                    if (t.status === 'in_progress') return 3;
+                    return 4;
+                };
 
-                const recentNotes = notesData.filter(n => isWithinLastDays(n.created_at, 7));
-                if (recentNotes.length > 0) {
-                    setNotes(recentNotes);
-                } else {
-                    const favoriteNotes = notesData.filter(n => n.is_favorite);
-                    const otherNotes = notesData.filter(n => !n.is_favorite);
-                    setNotes([...favoriteNotes, ...otherNotes].slice(0, 4));
-                }
+                const sortedTasks = [...tasksData].sort((a, b) => {
+                    const pA = getTaskPriority(a);
+                    const pB = getTaskPriority(b);
+                    if (pA !== pB) return pA - pB;
+                    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                });
+                setTasks(sortedTasks.slice(0, 5));
+
+                // --- NOTAS ---
+                const sortedNotes = [...notesData].sort((a, b) => {
+                    const dateA = a.updated_at ? new Date(a.updated_at) : new Date(a.created_at);
+                    const dateB = b.updated_at ? new Date(b.updated_at) : new Date(b.created_at);
+                    return dateB.getTime() - dateA.getTime();
+                });
+                setNotes(sortedNotes.slice(0, 4));
             } catch (error) {
                 console.error("Erro ao carregar dashboard:", error);
             } finally {
@@ -178,7 +191,7 @@ export function Dashboard() {
             {/* SEÇÃO 1: CLIENTES RECENTES */}
             <section className="space-y-3">
                 <DashboardSectionHeader
-                    title="Clientes adicionados recentemente"
+                    title="Clientes"
                     icon={<Users size={18} className="text-primary" />}
                     navigateTo="/clients"
                     count={clients.length}
@@ -268,7 +281,7 @@ export function Dashboard() {
             {/* SEÇÃO 2: TAREFAS */}
             <section className="space-y-3">
                 <DashboardSectionHeader
-                    title="Tarefas Recentes"
+                    title="Tarefas"
                     icon={<Clock size={18} className="text-orange-500" />}
                     navigateTo="/tasks"
                     count={tasks.length}
@@ -293,7 +306,7 @@ export function Dashboard() {
             {/* SEÇÃO 3: NOTAS RÁPIDAS */}
             <section className="space-y-3">
                 <DashboardSectionHeader
-                    title="Notas Rápidas"
+                    title="Notas"
                     icon={<Star size={18} className="text-yellow-500" />}
                     navigateTo="/notes"
                     count={notes.length}

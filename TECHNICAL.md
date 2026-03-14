@@ -1,4 +1,4 @@
-# Documentação Técnica - Suppy (Sistema de Suporte)
+# Documentação Técnica - Supy TI (Sistema de Suporte)
 
 ## 1. Visão Geral da Arquitetura
 
