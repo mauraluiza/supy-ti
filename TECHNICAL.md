@@ -2,7 +2,7 @@
 
 ## 1. Visão Geral da Arquitetura
 
-A aplicação é uma **SPA (Single Page Application)** desenvolvida com **React** e **TypeScript**, utilizando **Vite** como build tool para máxima performance. O Backend é totalmente servido pelo **Supabase** (BaaS - Backend as a Service), aprovechando suas capacidades de Realtime e Segurança.
+A aplicação é uma **SPA (Single Page Application)** desenvolvida com **React** e **TypeScript**, utilizando **Vite** como build tool para máxima performance. O Backend é totalmente servido pelo **Supabase** (BaaS - Backend as a Service), aproveitando suas capacidades de Realtime e Segurança.
 
 ### Stack Tecnológica
 

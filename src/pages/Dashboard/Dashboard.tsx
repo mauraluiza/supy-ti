@@ -50,7 +50,7 @@ export function Dashboard() {
                 const now = new Date();
                 const todayStr = now.toDateString();
 
-                const activeClientsCount = clientsData.filter(c => c.status === 'active').length;
+                const activeClientsCount = clientsData.filter(c => c.status !== 'inactive').length;
                 const pendingTasksCount = tasksData.filter(t => t.status === 'pending').length;
                 const lateTasksCount = tasksData.filter(t => t.due_at && new Date(t.due_at) < now && t.status !== 'done').length;
                 const doneTodayCount = tasksData.filter(t => t.status === 'done' && new Date(t.updated_at).toDateString() === todayStr).length;
