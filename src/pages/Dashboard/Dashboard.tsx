@@ -91,7 +91,7 @@ export function Dashboard() {
             {/* SEÇÃO 1: CLIENTES RECENTES */}
             <section className="space-y-3">
                 <DashboardSectionHeader
-                    title="Clientes Recentes"
+                    title="Clientes adicionados recentemente"
                     icon={<Users size={18} className="text-primary" />}
                     navigateTo="/clients"
                 />
